@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="25dp"
+    android:background="@drawable/dialog_background"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:id="@+id/warning_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="23dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:contentDescription="@string/app_name"
+            android:scaleType="center"
+            android:src="@mipmap/icon_error" />
+
+        <TextView
+            android:id="@+id/mdialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="17dp"
+            android:textColor="@color/theme_blue"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- 对话框消息内容 -->
+
+    <TextView
+        android:id="@+id/mdialog_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:textColor="@color/font_color_3"
+        android:textSize="16sp" />
+
+    <!-- 对话框确定/取消按钮 -->
+
+    <LinearLayout
+        android:id="@+id/dialog_btnlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="22dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/mdialog_btn1"
+            style="@style/kuang_button1"
+            android:background="@drawable/dialog_button_gray"
+            android:text="否"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/mdialog_btn2"
+            style="@style/kuang_button1"
+            android:text="是"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>
