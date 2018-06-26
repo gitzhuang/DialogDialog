@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'com.github.dcendents.android-maven'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -26,3 +28,4 @@ dependencies {
     implementation 'com.wang.avi:library:2.1.3'
 
 }
+
