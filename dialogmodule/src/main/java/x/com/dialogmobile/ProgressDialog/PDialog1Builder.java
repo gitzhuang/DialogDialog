@@ -14,6 +14,10 @@ import android.widget.TextView;
 import x.com.dialogmobile.NDialogBuilder;
 import x.com.dialogmobile.R;
 
+/**
+ * 无进度条加载对话框，10秒后自动显示错误信息
+ */
+
 public class PDialog1Builder {
     private Dialog dialog;
     private Dialog errordialog;
@@ -123,8 +127,8 @@ public class PDialog1Builder {
                 dialog.dismiss();
                 errordialog = new NDialogBuilder(context, 0, 1.0f)
                         .setTouchOutSideCancelable(false)
-                        .setMessage("345tret", NDialogBuilder.MSG_LAYOUT_LEFT)
-                        .setDialogAnimation(NDialogBuilder.DIALOG_ANIM_NORMAL)
+                        .setMessage("345tret", NDialogBuilder.Companion.getMSG_LAYOUT_LEFT())
+                        .setDialogAnimation(NDialogBuilder.Companion.getDIALOG_ANIM_NORMAL())
                         .setBtnClickListener(true, "", new NDialogBuilder.onDialogbtnClickListener() {
                             @Override
                             public void onDialogbtnClick(Context context, Dialog dialog, int whichBtn) {

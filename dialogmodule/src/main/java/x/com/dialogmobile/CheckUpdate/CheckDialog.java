@@ -25,8 +25,8 @@ public class CheckDialog {
     private void check(Context mContext, int layoutStyle, String msg, final int isforce, final OnCheckcallback callback) {
         new NDialogBuilder(mContext, layoutStyle, 1.0f)
                 .setTouchOutSideCancelable(false)
-                .setMessage(msg, NDialogBuilder.MSG_LAYOUT_LEFT)
-                .setDialogAnimation(NDialogBuilder.DIALOG_ANIM_NORMAL)
+                .setMessage(msg, NDialogBuilder.Companion.getMSG_LAYOUT_LEFT())
+                .setDialogAnimation(NDialogBuilder.Companion.getDIALOG_ANIM_NORMAL())
                 .setTitle("发现新版本")
                 .setBtnClickListener(true, btn1text, "立即更新",
                         new NDialogBuilder.onDialogbtnClickListener() {

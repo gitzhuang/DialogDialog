@@ -13,6 +13,9 @@ import android.widget.TextView;
 import x.com.dialogmobile.NDialogBuilder;
 import x.com.dialogmobile.R;
 
+/**
+ * 带进度条的加载对话框
+ */
 public class PDialog2Builder {
     private Dialog dialog;
     private Dialog errordialog;
@@ -136,8 +139,8 @@ public class PDialog2Builder {
                 dialog.dismiss();
                 errordialog = new NDialogBuilder(context, 0, 1.0f)
                         .setTouchOutSideCancelable(false)
-                        .setMessage("345tret", NDialogBuilder.MSG_LAYOUT_LEFT)
-                        .setDialogAnimation(NDialogBuilder.DIALOG_ANIM_NORMAL)
+                        .setMessage("345tret", NDialogBuilder.Companion.getMSG_LAYOUT_LEFT())
+                        .setDialogAnimation(NDialogBuilder.Companion.getDIALOG_ANIM_NORMAL())
                         .setBtnClickListener(true, "hao", new NDialogBuilder.onDialogbtnClickListener() {
                             @Override
                             public void onDialogbtnClick(Context context, Dialog dialog, int whichBtn) {
