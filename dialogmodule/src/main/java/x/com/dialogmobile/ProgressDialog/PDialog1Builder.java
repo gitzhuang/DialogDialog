@@ -14,6 +14,9 @@ import android.widget.TextView;
 import x.com.dialogmobile.NDialogBuilder;
 import x.com.dialogmobile.R;
 
+/**
+ * 加载进度框，10秒后弹出出错提示
+ */
 public class PDialog1Builder {
     private Dialog dialog;
     private Dialog errordialog;

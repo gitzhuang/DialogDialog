@@ -13,6 +13,9 @@ import android.widget.TextView;
 import x.com.dialogmobile.NDialogBuilder;
 import x.com.dialogmobile.R;
 
+/**
+ * 有进度条进度框
+ */
 public class PDialog2Builder {
     private Dialog dialog;
     private Dialog errordialog;

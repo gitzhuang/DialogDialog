@@ -280,6 +280,9 @@ public class NDialogBuilder {
                     }
                 }
             });
+            if (btn2 == 0) {
+                btnConfirm.setBackgroundResource(R.drawable.button_onclick);
+            }
         }
         if (btn2 != 0) {
             // 设置取消按钮
