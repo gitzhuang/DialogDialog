@@ -224,6 +224,9 @@ private constructor(private val context: Context, layoutStyle: Int, isSystemAler
                 btnClickListener?.onDialogbtnClick(context, dialog,
                         onDialogbtnClickListener.BUTTON_CONFIRM)
             }
+            if (btn2 == 0) {
+                btnConfirm.setBackgroundResource(R.drawable.button_onclick)
+            }
         }
         if (btn2 != 0) {
             // 设置取消按钮
