@@ -27,7 +27,7 @@ public class CheckDialog {
                 .setTouchOutSideCancelable(false)
                 .setMessage(msg, NDialogBuilder.MSG_LAYOUT_LEFT)
                 .setDialogAnimation(NDialogBuilder.DIALOG_ANIM_NORMAL)
-                .setTitle("发现新版本")
+                .setTitle("发现新版本111")
                 .setBtnClickListener(true, btn1text, "立即更新",
                         new NDialogBuilder.onDialogbtnClickListener() {
                             @Override
