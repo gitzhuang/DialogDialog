@@ -3,24 +3,21 @@ package x.com.dialogmobile.ProgressDialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import x.com.dialogmobile.NDialogBuilder;
 import x.com.dialogmobile.R;
 
-/**
- * 有进度条进度框
- */
 public class PDialog2Builder {
     private Dialog dialog;
     private Dialog errordialog;
     private Context context;
-    private TextView dialogTitle, dialogMsg;
+    private TextView dialogTitle, dialogMsg, tvCancle, tvSure, tvProgress;
+    private ProgressBar progressBar;
     // 弹出dialog时候是否要显示阴影
     private static boolean dimEnable = true;
     /**
@@ -112,6 +109,81 @@ public class PDialog2Builder {
     }
 
     /**
+     * 取消按钮
+     * @param cancleTitle
+     * @param listener
+     * @return
+     */
+    public PDialog2Builder setBtnCancle(String cancleTitle, View.OnClickListener listener) {
+        tvCancle = dialog.findViewById(R.id.tv_cancle);
+        if (dialog != null) {
+            if (cancleTitle != null) {
+                tvCancle.setText(cancleTitle);
+                tvCancle.setVisibility(View.VISIBLE);
+            } else {
+                tvCancle.setVisibility(View.GONE);
+            }
+        }
+        tvCancle.setOnClickListener(listener);
+        return this;
+    }
+
+    /**
+     * 确定按钮
+     * @param cancleTitle
+     * @param listener
+     * @return
+     */
+    public PDialog2Builder setBtnSure(String cancleTitle, View.OnClickListener listener) {
+        tvSure = dialog.findViewById(R.id.tv_sure);
+        if (dialog != null) {
+            if (cancleTitle != null) {
+                tvSure.setText(cancleTitle);
+                tvSure.setVisibility(View.VISIBLE);
+            } else {
+                tvSure.setVisibility(View.GONE);
+            }
+        }
+        tvSure.setOnClickListener(listener);
+        return this;
+    }
+
+    /**
+     * 设置取消、确定按钮是否显示
+     * @param btnCancle
+     * @param btnSure
+     * @return
+     */
+    public PDialog2Builder setBtnVisity(boolean btnCancle, boolean btnSure){
+
+        if(tvCancle != null){
+            tvCancle.setVisibility(btnCancle ? View.VISIBLE :View.GONE);
+        }
+        if(tvSure != null){
+            tvSure.setVisibility(btnSure ? View.VISIBLE :View.GONE);
+        }
+
+        return this;
+    }
+
+    /**
+     * 设置取消、确定按钮是否显示
+     * @param progress
+     * @return
+     */
+    public PDialog2Builder setProgress(int progress){
+        if(progressBar == null){
+            progressBar = dialog.findViewById(R.id.progress);
+        }
+        if (tvProgress == null) {
+            tvProgress = dialog.findViewById(R.id.tv_progress);
+        }
+        progressBar.setProgress(progress);
+        tvProgress.setText(String.valueOf(progress));
+        return this;
+    }
+
+    /**
      * 进度框超时监听
      *
      * @author zhl
@@ -130,27 +202,27 @@ public class PDialog2Builder {
         if (context instanceof Activity) {
             dialog.setOwnerActivity((Activity) context);
         }
-        new CountDownTimer(10000, 1000) {
-            public void onTick(long millisUntilFinished) {
-            }
-
-            public void onFinish() {
-                //显示错误对话框
-                dialog.dismiss();
-                errordialog = new NDialogBuilder(context, 0, 1.0f)
-                        .setTouchOutSideCancelable(false)
-                        .setMessage("345tret", NDialogBuilder.MSG_LAYOUT_LEFT)
-                        .setDialogAnimation(NDialogBuilder.DIALOG_ANIM_NORMAL)
-                        .setBtnClickListener(true, "hao", new NDialogBuilder.onDialogbtnClickListener() {
-                            @Override
-                            public void onDialogbtnClick(Context context, Dialog dialog, int whichBtn) {
-                                errordialog.dismiss();
-                            }
-                        })
-                        .create();
-                errordialog.show();
-            }
-        }.start();
+//        new CountDownTimer(10000, 1000) {
+//            public void onTick(long millisUntilFinished) {
+//            }
+//
+//            public void onFinish() {
+//                //显示错误对话框
+//                dialog.dismiss();
+//                errordialog = new NDialogBuilder(context, 0, 1.0f)
+//                        .setTouchOutSideCancelable(false)
+//                        .setMessage("345tret", NDialogBuilder.MSG_LAYOUT_LEFT)
+//                        .setDialogAnimation(NDialogBuilder.DIALOG_ANIM_NORMAL)
+//                        .setBtnClickListener(true, "hao", new NDialogBuilder.onDialogbtnClickListener() {
+//                            @Override
+//                            public void onDialogbtnClick(Context context, Dialog dialog, int whichBtn) {
+//                                errordialog.dismiss();
+//                            }
+//                        })
+//                        .create();
+//                errordialog.show();
+//            }
+//        }.start();
         return dialog;
     }
 }
