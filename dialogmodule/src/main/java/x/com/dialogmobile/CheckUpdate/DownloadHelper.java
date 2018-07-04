@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,7 +17,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
+import java.net.SocketException;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 import androidx.core.content.FileProvider;
 import x.com.dialogmobile.BuildConfig;
@@ -25,12 +28,14 @@ import x.com.dialogmobile.R;
 
 
 public class DownloadHelper {
+	private final String TAG = "download";
 
 	private static final int DOWNLOAD_ING = 1;
 	private static final int DOWNLOAD_OVER = 2;
+	private static final int DOWNLOAD_AGAIN = 3;
 	private String mVersionName;
 	private String mDownloadUrl;
-	private Activity mContext;
+	private Activity mActivity;
 	private String mSavePath;
 	private int mProgress;
 	private Boolean mIsCancle = false;
@@ -42,21 +47,27 @@ public class DownloadHelper {
 	private Dialog mDialog;
 
 	private NotificationHelper mNotificationHelper;
+	private int mNotificationIconId;
+	private String mNotificationTitle;
+
 
 	public interface DownloadCallBack{
 		void downloadCancel();//取消下载时回调
-		void installCancel();
+		void installCancel();//取消安装时回调
+		void downloadFail();//下载失败时回调
 	}
 
-	public DownloadHelper(Activity context, final String downloadUrl, int isForce, DownloadCallBack downloadCallBack) {
-		mContext = context;
+	public DownloadHelper(Activity activity, final String downloadUrl, int isForce, int notificationIconId, String notificationTitle, DownloadCallBack downloadCallBack) {
+		mActivity = activity;
 		mIsForce = isForce;
 		mDownloadUrl = downloadUrl;
 		mDownloadCallBack = downloadCallBack;
 		mVersionName = BuildConfig.APPLICATION_ID + ".checkUp";
 		mSavePath = Environment.getExternalStorageDirectory() + "/" + "deanDownload";
+		mNotificationIconId = notificationIconId;
+		mNotificationTitle = notificationTitle;
 
-		mProgressHandler = new MyHandle(mContext) {
+		mProgressHandler = new MyHandle(mActivity) {
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
@@ -65,113 +76,200 @@ public class DownloadHelper {
 						mNotificationHelper.setProgress(mProgress, null);
 						break;
 					case DOWNLOAD_OVER:
-						mPDialog2Builder.setBtnCancle("下次再说", new View.OnClickListener() {
-							@Override
-							public void onClick(View view) {
-								mDialog.dismiss();
-								mDownloadCallBack.installCancel();
-							}
-						});
-						mPDialog2Builder.setBtnVisity(mIsForce == 0, true);
-						mPDialog2Builder.setProgress(100);
-						mNotificationHelper.setProgress(100, getInstallApkIntent(new File(mSavePath, mVersionName)));
+						if(mNotificationHelper != null){
+							mNotificationHelper.setProgress(100, getInstallApkIntent(new File(mSavePath, mVersionName)));
+						}
 						installAPK();
+						break;
+					case DOWNLOAD_AGAIN:
+						showReDownload();
 						break;
 				}
 			}
 		};
 
+		startDownload();
+	}
+
+	/**
+	 * 开启下载
+	 */
+	public void startDownload(){
+		if(mNotificationHelper == null){
+			mNotificationHelper = new NotificationHelper(mActivity,  mNotificationIconId, mNotificationTitle, true);
+			mNotificationHelper.setProgress(0, null);
+		}
 		//显示下载对话框
-		showDownloadDialog();
-		//显示通知栏下载进度
-		mNotificationHelper = new NotificationHelper(mContext, "小鸡炖蘑菇", mSavePath, mVersionName);
+		showDialog();
+		//获取网络资源，判断下载或直接安装
+		getApkResource();
 	}
 
 	/*
      * 显示正在下载对话框
      */
-	public void showDownloadDialog() {
-		mPDialog2Builder =  new PDialog2Builder(mContext, R.layout.download_progress_layout, 1f)
-				.setMessage("正在下载：")
-				.setTouchOutSideCancelable(false)
-				.setBtnCancle("取消下载", new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						mIsCancle = true;
-						mDialog.dismiss();
-						mDownloadCallBack.downloadCancel();
-					}
-				}).setBtnSure("立即安装", new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						installAPK();
-					}
-				}).setBtnVisity(false ,false );
-		mDialog = mPDialog2Builder.create();
-		mDialog.show();
+	 private void showDialog() {
+	 	if(mDialog == null || mPDialog2Builder == null){
+			mPDialog2Builder =  new PDialog2Builder(mActivity, R.layout.download_progress_layout, 1f)
+					.setMessage("正在下载：")
+					.setTouchOutSideCancelable(false)
+					.setBtnCancel("取消下载", new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							mIsCancle = true;
+							mDialog.dismiss();
+							mDownloadCallBack.downloadCancel();
+						}
+					}).setBtnCancelVisity(false);
+			mDialog = mPDialog2Builder.create();
+		}
 
-		downloadAPK();
+		mDialog.show();
 	}
 
-		/*
-    * 开启新线程下载文件
+	/*
+    * 开启新线程
+    * 获取网络apk资源文件，判断下载或直接安装
     */
-	private void downloadAPK() {
-		System.out.println(mDownloadUrl);
+	private void getApkResource() {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-			try {
 				if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 					File file = new File(mSavePath);
-					if (!file.exists()) {
-						file.mkdir();
-					}
-					URL url = new URL(mDownloadUrl);
-					HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-					connection.connect();
-					InputStream is = connection.getInputStream();
-					int len = connection.getContentLength();
 					File apkFile = new File(mSavePath, mVersionName);
-					FileOutputStream fos = new FileOutputStream(apkFile);
-					int count = 0;
-					byte[] buffer = new byte[1024];
-					while (!mIsCancle) {
-						int numread = is.read(buffer);
-						count += numread;
-						// 计算进度条的当前位置
-						mProgress = (int) (((float) count / len) * 100);
-						// 更新进度条
-						mProgressHandler.sendEmptyMessage(DOWNLOAD_ING);
-						// 下载完成
-						if (numread < 0 ) {
-							mProgressHandler.sendEmptyMessage(DOWNLOAD_OVER);
-							break;
+					try {
+						if (!file.exists()) {
+							file.mkdir();
 						}
-						fos.write(buffer, 0, numread);
+						URL url = new URL(mDownloadUrl);
+						HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+						connection.connect();
+						InputStream is = connection.getInputStream();
+						int len = connection.getContentLength();//获取网络apk大小
+
+	//						//判断本地是否存在apk （此功能需要配合版本号使用）
+	//						if(apkFile.exists()){
+	//							long length = apkFile.length();//本地apk大小
+	//							//判断apk完整性
+	//							if(len == length){
+	//								mProgressHandler.sendEmptyMessage(DOWNLOAD_OVER);
+	//							}else {
+	//								//apk不完整，则删除重新下载
+	//								apkFile.delete();
+	//							}
+	//						}else {
+	//							downloadApk(is, len, apkFile);
+	//						}
+
+						if(apkFile.exists()){
+							apkFile.delete();
+						}
+						downloadApk(is, len, apkFile);
+					} catch (Exception e) {
+						downloadFail(apkFile);
+						Log.e(TAG, "getApk: " + e.toString());
+						//mProgressHandler.sendEmptyMessage(DOWNLOAD_AGAIN);
 					}
 				} else {
-					System.out.println("00000000000000000000000000000");
+					Log.e(TAG, "getApk: SD卡读写权限受限");
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 			}
 		}).start();
 	}
 
+	/**
+	 * 下载apk
+	 * @param is
+	 * @param len
+	 * @param apkFile
+	 */
+	public void downloadApk(InputStream is, int len, File apkFile){
+		//显示通知栏下载进度
+
+		mProgress = 0;
+		int mMiddlerogress = 0;
+		try{
+			FileOutputStream fos = new FileOutputStream(apkFile);
+			int count = 0;
+			byte[] buffer = new byte[1024];
+			while (!mIsCancle) {
+				int numread = is.read(buffer);
+				count += numread;
+				// 计算进度条的当前位置
+				mMiddlerogress = (int) (((float) count / len) * 100);
+				if(mMiddlerogress > mProgress){
+					// 更新进度条
+					mProgressHandler.sendEmptyMessage(DOWNLOAD_ING);
+					mProgress = mMiddlerogress;
+				}
+				// 下载完成
+				if (numread < 0 ) {
+					mProgressHandler.sendEmptyMessage(DOWNLOAD_OVER);
+					break;
+				}
+				fos.write(buffer, 0, numread);
+			}
+		}catch (Exception e){
+			downloadFail(apkFile);
+			Log.e(TAG, "download: " + e.toString());
+		}
+	}
+
+	/**
+	 *
+	 */
+	public void downloadFail(File apkFile){
+		if(apkFile.exists()){
+			apkFile.delete();
+		}
+		mDialog.dismiss();
+		mDownloadCallBack.downloadFail();
+	}
+	/**
+	 * 重新下载
+	 */
+	private void showReDownload(){
+		if(mPDialog2Builder != null){
+			mPDialog2Builder.setBtnSure("重新下载", new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					view.setVisibility(View.GONE);
+					getApkResource();
+				}
+			});
+			mPDialog2Builder.setBtnSureVisity(true);
+		}
+	}
+
 	/*
-     * 下载到本地后执行安装
+     * 执行安装apk
      */
-	protected void installAPK() {
+	private void installAPK() {
+
+		mPDialog2Builder.setProgress(100);
+		mPDialog2Builder.setBtnCancel("下次再说", new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				mDialog.dismiss();
+				mDownloadCallBack.installCancel();
+			}
+		});
+		mPDialog2Builder.setBtnSure("立即安装", new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				installAPK();
+			}
+		});
+		mPDialog2Builder.setBtnVisity(mIsForce == 0, true);
 		try {
 			File apkFile = new File(mSavePath, mVersionName);
 			if (!apkFile.exists()) {
 				return;
 			}
-			mContext.startActivity(getInstallApkIntent(apkFile));
+			mActivity.startActivity(getInstallApkIntent(apkFile));
 		}catch (Exception e){
-			Toast.makeText(mContext, "安装失败", Toast.LENGTH_SHORT);
+			Toast.makeText(mActivity, "安装失败", Toast.LENGTH_SHORT);
 		}
 	}
 
@@ -180,32 +278,30 @@ public class DownloadHelper {
 	 * @param apkFile
 	 * @return
 	 */
-	public Intent getInstallApkIntent(File apkFile){
+	private Intent getInstallApkIntent(File apkFile){
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		//版本在7.0以上是不能直接通过uri访问的
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
 			//参数1 上下文, 参数2 在AndroidManifest中的android:authorities值, 参数3  共享的文件
-			Uri apkUri = FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID+".fileProvider", apkFile);
+			Uri apkUri = FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID+".fileProvider", apkFile);
 			//由于没有在Activity环境下启动Activity,设置下面的标签
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			//添加这一句表示对目标应用临时授权该Uri所代表的文件
 			intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 			intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
 		}else {
-			Intent install = new Intent(Intent.ACTION_VIEW);
-			install.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
-			install.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		}
 		return intent;
 	}
 
-
 	static class MyHandle extends Handler{
-		final WeakReference<Activity> mActivity;
+		final WeakReference<Activity> activity;
 
 		MyHandle(Activity activity) {
-			mActivity = new WeakReference<Activity>(activity);
+			this.activity = new WeakReference<Activity>(activity);
 		}
 
 		@Override
