@@ -16,7 +16,7 @@ public class PDialog2Builder {
     private Dialog dialog;
     private Dialog errordialog;
     private Context context;
-    private TextView dialogTitle, dialogMsg, tvCancle, tvSure, tvProgress;
+    private TextView dialogTitle, dialogMsg, tvCancel, tvSure, tvProgress;
     private ProgressBar progressBar;
     // 弹出dialog时候是否要显示阴影
     private static boolean dimEnable = true;
@@ -96,7 +96,7 @@ public class PDialog2Builder {
      * @return this
      */
     public PDialog2Builder setMessage(String message) {
-        dialogMsg = dialog.findViewById(R.id.mdialog_message);
+        dialogMsg = (TextView) dialog.findViewById(R.id.mdialog_message);
         if (dialogMsg != null) {
             if (message != null) {
                 dialogMsg.setText(message);
@@ -110,21 +110,38 @@ public class PDialog2Builder {
 
     /**
      * 取消按钮
-     * @param cancleTitle
+     * @param cancelTitle
      * @param listener
      * @return
      */
-    public PDialog2Builder setBtnCancle(String cancleTitle, View.OnClickListener listener) {
-        tvCancle = dialog.findViewById(R.id.tv_cancle);
+    public PDialog2Builder setBtnCancel(String cancelTitle, View.OnClickListener listener) {
+        if(tvCancel == null){
+            tvCancel = (TextView) dialog.findViewById(R.id.tv_cancel);
+        }
         if (dialog != null) {
-            if (cancleTitle != null) {
-                tvCancle.setText(cancleTitle);
-                tvCancle.setVisibility(View.VISIBLE);
+            if (cancelTitle != null) {
+                tvCancel.setText(cancelTitle);
+                tvCancel.setVisibility(View.VISIBLE);
             } else {
-                tvCancle.setVisibility(View.GONE);
+                tvCancel.setVisibility(View.GONE);
             }
         }
-        tvCancle.setOnClickListener(listener);
+        tvCancel.setOnClickListener(listener);
+        return this;
+    }
+
+    /**
+     * 设置取消按钮是否可见
+     * @param isVisity
+     * @return
+     */
+    public PDialog2Builder setBtnCancelVisity(boolean isVisity) {
+        if (tvCancel == null) {
+            tvCancel = dialog.findViewById(R.id.tv_sure);
+        }
+        if (dialog != null) {
+            tvCancel.setVisibility(isVisity ? View.VISIBLE : View.GONE);
+        }
         return this;
     }
 
@@ -135,7 +152,9 @@ public class PDialog2Builder {
      * @return
      */
     public PDialog2Builder setBtnSure(String cancleTitle, View.OnClickListener listener) {
-        tvSure = dialog.findViewById(R.id.tv_sure);
+        if (tvSure == null) {
+            tvSure = (TextView) dialog.findViewById(R.id.tv_sure);
+        }
         if (dialog != null) {
             if (cancleTitle != null) {
                 tvSure.setText(cancleTitle);
@@ -149,15 +168,29 @@ public class PDialog2Builder {
     }
 
     /**
+     * 设置确定按钮是否可见
+     * @param isVisity
+     * @return
+     */
+    public PDialog2Builder setBtnSureVisity(boolean isVisity) {
+        if (tvSure == null) {
+            tvSure = (TextView) dialog.findViewById(R.id.tv_sure);
+        }
+        if (dialog != null) {
+            tvSure.setVisibility(isVisity ? View.VISIBLE : View.GONE);
+        }
+        return this;
+    }
+
+    /**
      * 设置取消、确定按钮是否显示
      * @param btnCancle
      * @param btnSure
      * @return
      */
     public PDialog2Builder setBtnVisity(boolean btnCancle, boolean btnSure){
-
-        if(tvCancle != null){
-            tvCancle.setVisibility(btnCancle ? View.VISIBLE :View.GONE);
+        if(tvCancel != null){
+            tvCancel.setVisibility(btnCancle ? View.VISIBLE :View.GONE);
         }
         if(tvSure != null){
             tvSure.setVisibility(btnSure ? View.VISIBLE :View.GONE);

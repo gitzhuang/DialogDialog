@@ -78,6 +78,9 @@
         <item name="android:textColor">@color/theme_blue</item>
         <item name="android:textSize">14sp</item>
         <item name="android:singleLine">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <!--<item name="android:foreground">?selectableItemBackground</item>-->
     </style>
 
 </resources>

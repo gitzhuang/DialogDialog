@@ -69,16 +69,16 @@
         android:visibility="visible">
 
         <TextView
-            android:id="@+id/tv_cancle"
+            android:id="@+id/tv_cancel"
             style="@style/download_button"
             android:text="取消下载"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_sure"
             style="@style/download_button"
             android:text="立即安装"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_marginStart="20dp"/>
 
     </LinearLayout>
