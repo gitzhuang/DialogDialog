@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="blue1">#106CDB</color>
+    <color name="cccc">#CCCCCC</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="commonbuttoncolor">#FF2f80db</color>
+    <color name="commonbuttoncolor_down">#cc2f80db</color>
+    <color name="commonkuangcolor">#ffffffff</color>
+    <color name="commontextcolor">#20aee5</color>
+    <color name="error_stroke_color">#F27474</color>
+    <color name="faildgray">#dddddd</color>
+    <color name="faildtextcolor">#333333</color>
+    <color name="font_color_1">#FF000000</color>
+    <color name="font_color_3">#FF333333</color>
+    <color name="font_color_4">#FFC19901</color>
+    <color name="font_color_6">#FF666666</color>
+    <color name="font_color_7">#FF777777</color>
+    <color name="font_color_8">#FFBBBBBB</color>
+    <color name="font_color_9">#FF999999</color>
+    <color name="guangbiaocolor">#cc2f80db</color>
+    <color name="jifei">#ff2f80db</color>
+    <color name="success_stroke_color">#A5DC86</color>
+    <color name="theme_blue">#20AEE5</color>
+    <color name="white">#ffffff</color>
+    <string name="app_name">DialogMobile</string>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="Dialog" parent="@android:style/Theme.Dialog">
+
+        <!-- 去除标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 去除背景 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.4</item>
+    </style>
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/modal_in</item>
+        <item name="android:windowExitAnimation">@anim/modal_out</item>
+    </style>
+    <style name="DialogAnimationSlidBottom">
+        <item name="android:windowEnterAnimation">@anim/dialog_slid_open_bottom</item>
+        <item name="android:windowExitAnimation">@anim/dialog_slid_close_bottom</item>
+    </style>
+    <style name="DialogAnimationSlidRight">
+        <item name="android:windowEnterAnimation">@anim/dialog_slid_open_right</item>
+        <item name="android:windowExitAnimation">@anim/dialog_slid_close_right</item>
+    </style>
+    <style name="DialogAnimationSlidTop">
+        <item name="android:windowEnterAnimation">@anim/dialog_slid_open_top</item>
+        <item name="android:windowExitAnimation">@anim/dialog_slid_close_top</item>
+    </style>
+    <style name="DialogDim" parent="@android:style/Theme.Dialog">
+
+        <!-- 去除标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 去除背景 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+    <style name="StyleProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:minHeight">5dp</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">
+            @android:drawable/progress_indeterminate_horizontal
+        </item>
+        <item name="android:progressDrawable">@drawable/drawable_progressbar</item>
+    </style>
+    <style name="download_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/theme_blue</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <!--<item name="android:foreground">?selectableItemBackground</item>-->
+    </style>
+    <style name="kuang_button1">
+        <item name="android:layout_width">94dp</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@drawable/sel_text_p_blue_disable_gray</item>
+        <item name="android:background">@drawable/button_onclick</item>
+        <item name="android:layout_marginStart">15dp</item>
+        <item name="android:layout_marginEnd">15dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <declare-styleable name="AVLoadingIndicatorView">
+        <attr name="indicator">
+            <flag name="BallPulse" value="0"/>
+            <flag name="BallGridPulse" value="1"/>
+            <flag name="BallClipRotate" value="2"/>
+            <flag name="BallClipRotatePulse" value="3"/>
+            <flag name="SquareSpin" value="4"/>
+            <flag name="BallClipRotateMultiple" value="5"/>
+            <flag name="BallPulseRise" value="6"/>
+            <flag name="BallRotate" value="7"/>
+            <flag name="CubeTransition" value="8"/>
+            <flag name="BallZigZag" value="9"/>
+            <flag name="BallZigZagDeflect" value="10"/>
+            <flag name="BallTrianglePath" value="11"/>
+            <flag name="BallScale" value="12"/>
+            <flag name="LineScale" value="13"/>
+            <flag name="LineScaleParty" value="14"/>
+            <flag name="BallScaleMultiple" value="15"/>
+            <flag name="BallPulseSync" value="16"/>
+            <flag name="BallBeat" value="17"/>
+            <flag name="LineScalePulseOut" value="18"/>
+            <flag name="LineScalePulseOutRapid" value="19"/>
+            <flag name="BallScaleRipple" value="20"/>
+            <flag name="BallScaleRippleMultiple" value="21"/>
+            <flag name="BallSpinFadeLoader" value="22"/>
+            <flag name="LineSpinFadeLoader" value="23"/>
+            <flag name="TriangleSkewSpin" value="24"/>
+            <flag name="Pacman" value="25"/>
+            <flag name="BallGridBeat" value="26"/>
+            <flag name="SemiCircleSpin" value="27"/>
+        </attr>
+        <attr format="color" name="indicator_color"/>
+    </declare-styleable>
+    <declare-styleable name="vericationCodeInput">
+
+        <attr format="integer" name="box"/>
+        <attr format="dimension" name="child_h_padding"/>
+        <attr format="dimension" name="child_v_padding"/>
+        <attr format="dimension" name="child_width"/>
+        <attr format="dimension" name="child_height"/>
+        <attr format="dimension" name="padding"/>
+        <attr format="reference" name="box_bg_focus"/>
+        <attr format="reference" name="box_bg_normal"/>
+        <attr format="string" name="inputType"/>
+    </declare-styleable>
+</resources>

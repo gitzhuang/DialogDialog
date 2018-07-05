@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\app\DialogDialog\dialogmodule\src\main\res"><file path="C:\app\DialogDialog\dialogmodule\src\main\res\drawable\ic_launcher_background.xml" preprocessing="true" qualifiers=""><generated-file path="C:\app\DialogDialog\dialogmodule\build\generated\res\pngs\debug\drawable-xxxhdpi\ic_launcher_background.png" qualifiers="xxxhdpi-v4" type="drawable"/><generated-file path="C:\app\DialogDialog\dialogmodule\build\generated\res\pngs\debug\drawable-mdpi\ic_launcher_background.png" qualifiers="mdpi-v4" type="drawable"/><generated-file path="C:\app\DialogDialog\dialogmodule\build\generated\res\pngs\debug\drawable-ldpi\ic_launcher_background.png" qualifiers="ldpi-v4" type="drawable"/><generated-file path="C:\app\DialogDialog\dialogmodule\build\generated\res\pngs\debug\drawable-xxhdpi\ic_launcher_background.png" qualifiers="xxhdpi-v4" type="drawable"/><generated-file path="C:\app\DialogDialog\dialogmodule\build\generated\res\pngs\debug\drawable-hdpi\ic_launcher_background.png" qualifiers="hdpi-v4" type="drawable"/><generated-file path="C:\app\DialogDialog\dialogmodule\build\generated\res\pngs\debug\drawable-xhdpi\ic_launcher_background.png" qualifiers="xhdpi-v4" type="drawable"/><generated-file path="C:\app\DialogDialog\dialogmodule\build\generated\res\pngs\debug\drawable-anydpi-v21\ic_launcher_background.xml" qualifiers="anydpi-v21" type="drawable"/></file></source><source path="C:\app\DialogDialog\dialogmodule\build\generated\res\rs\debug"/><source path="C:\app\DialogDialog\dialogmodule\build\generated\res\resValues\debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\app\DialogDialog\dialogmodule\src\main\res"><file name="dialog_slid_close_bottom" path="C:\app\DialogDialog\dialogmodule\src\main\res\anim\dialog_slid_close_bottom.xml" qualifiers="" type="anim"/><file name="dialog_slid_close_right" path="C:\app\DialogDialog\dialogmodule\src\main\res\anim\dialog_slid_close_right.xml" qualifiers="" type="anim"/><file name="dialog_slid_close_top" path="C:\app\DialogDialog\dialogmodule\src\main\res\anim\dialog_slid_close_top.xml" qualifiers="" type="anim"/><file name="dialog_slid_open_bottom" path="C:\app\DialogDialog\dialogmodule\src\main\res\anim\dialog_slid_open_bottom.xml" qualifiers="" type="anim"/><file name="dialog_slid_open_right" path="C:\app\DialogDialog\dialogmodule\src\main\res\anim\dialog_slid_open_right.xml" qualifiers="" type="anim"/><file name="dialog_slid_open_top" path="C:\app\DialogDialog\dialogmodule\src\main\res\anim\dialog_slid_open_top.xml" qualifiers="" type="anim"/><file name="modal_in" path="C:\app\DialogDialog\dialogmodule\src\main\res\anim\modal_in.xml" qualifiers="" type="anim"/><file name="modal_out" path="C:\app\DialogDialog\dialogmodule\src\main\res\anim\modal_out.xml" qualifiers="" type="anim"/><file name="button_onclick" path="C:\app\DialogDialog\dialogmodule\src\main\res\drawable\button_onclick.xml" qualifiers="" type="drawable"/><file name="button_onclickdown" path="C:\app\DialogDialog\dialogmodule\src\main\res\drawable\button_onclickdown.xml" qualifiers="" type="drawable"/><file name="button_onclickup" path="C:\app\DialogDialog\dialogmodule\src\main\res\drawable\button_onclickup.xml" qualifiers="" type="drawable"/><file name="dialog_background" path="C:\app\DialogDialog\dialogmodule\src\main\res\drawable\dialog_background.xml" qualifiers="" type="drawable"/><file name="dialog_button_blue" path="C:\app\DialogDialog\dialogmodule\src\main\res\drawable\dialog_button_blue.xml" qualifiers="" type="drawable"/><file name="dialog_button_gray" path="C:\app\DialogDialog\dialogmodule\src\main\res\drawable\dialog_button_gray.xml" qualifiers="" type="drawable"/><file name="drawable_progressbar" path="C:\app\DialogDialog\dialogmodule\src\main\res\drawable\drawable_progressbar.xml" qualifiers="" type="drawable"/><file name="error_center_x" path="C:\app\DialogDialog\dialogmodule\src\main\res\drawable\error_center_x.xml" qualifiers="" type="drawable"/><file name="error_circle" path="C:\app\DialogDialog\dialogmodule\src\main\res\drawable\error_circle.xml" qualifiers="" type="drawable"/><file name="sel_text_p_blue_disable_gray" path="C:\app\DialogDialog\dialogmodule\src\main\res\drawable\sel_text_p_blue_disable_gray.xml" qualifiers="" type="drawable"/><file name="toast_bg_shape" path="C:\app\DialogDialog\dialogmodule\src\main\res\drawable\toast_bg_shape.xml" qualifiers="" type="drawable"/><file name="verification_edit_bg_focus" path="C:\app\DialogDialog\dialogmodule\src\main\res\drawable\verification_edit_bg_focus.xml" qualifiers="" type="drawable"/><file name="verification_edit_bg_normal" path="C:\app\DialogDialog\dialogmodule\src\main\res\drawable\verification_edit_bg_normal.xml" qualifiers="" type="drawable"/><file name="ic_launcher_foreground" path="C:\app\DialogDialog\dialogmodule\src\main\res\drawable-v24\ic_launcher_foreground.xml" qualifiers="v24" type="drawable"/><file name="download_progress_layout" path="C:\app\DialogDialog\dialogmodule\src\main\res\layout\download_progress_layout.xml" qualifiers="" type="layout"/><file name="logindialog_layout" path="C:\app\DialogDialog\dialogmodule\src\main\res\layout\logindialog_layout.xml" qualifiers="" type="layout"/><file name="mdialog_layout" path="C:\app\DialogDialog\dialogmodule\src\main\res\layout\mdialog_layout.xml" qualifiers="" type="layout"/><file name="pdialog_layout" path="C:\app\DialogDialog\dialogmodule\src\main\res\layout\pdialog_layout.xml" qualifiers="" type="layout"/><file name="toast_message" path="C:\app\DialogDialog\dialogmodule\src\main\res\layout\toast_message.xml" qualifiers="" type="layout"/><file name="icon_error" path="C:\app\DialogDialog\dialogmodule\src\main\res\mipmap-hdpi\icon_error.png" qualifiers="hdpi-v4" type="mipmap"/><file name="ic_launcher" path="C:\app\DialogDialog\dialogmodule\src\main\res\mipmap-hdpi\ic_launcher.png" qualifiers="hdpi-v4" type="mipmap"/><file name="icon_error" path="C:\app\DialogDialog\dialogmodule\src\main\res\mipmap-mdpi\icon_error.png" qualifiers="mdpi-v4" type="mipmap"/><file name="ic_launcher" path="C:\app\DialogDialog\dialogmodule\src\main\res\mipmap-mdpi\ic_launcher.png" qualifiers="mdpi-v4" type="mipmap"/><file name="icon_error" path="C:\app\DialogDialog\dialogmodule\src\main\res\mipmap-xhdpi\icon_error.png" qualifiers="xhdpi-v4" type="mipmap"/><file name="ic_launcher" path="C:\app\DialogDialog\dialogmodule\src\main\res\mipmap-xhdpi\ic_launcher.png" qualifiers="xhdpi-v4" type="mipmap"/><file name="icon_error" path="C:\app\DialogDialog\dialogmodule\src\main\res\mipmap-xxhdpi\icon_error.png" qualifiers="xxhdpi-v4" type="mipmap"/><file name="ic_launcher" path="C:\app\DialogDialog\dialogmodule\src\main\res\mipmap-xxhdpi\ic_launcher.png" qualifiers="xxhdpi-v4" type="mipmap"/><file name="icon_error" path="C:\app\DialogDialog\dialogmodule\src\main\res\mipmap-xxxhdpi\icon_error.png" qualifiers="xxxhdpi-v4" type="mipmap"/><file name="ic_launcher" path="C:\app\DialogDialog\dialogmodule\src\main\res\mipmap-xxxhdpi\ic_launcher.png" qualifiers="xxxhdpi-v4" type="mipmap"/><file path="C:\app\DialogDialog\dialogmodule\src\main\res\values\attrs.xml" qualifiers=""><declare-styleable name="AVLoadingIndicatorView">
+        <attr name="indicator">
+            <flag name="BallPulse" value="0"/>
+            <flag name="BallGridPulse" value="1"/>
+            <flag name="BallClipRotate" value="2"/>
+            <flag name="BallClipRotatePulse" value="3"/>
+            <flag name="SquareSpin" value="4"/>
+            <flag name="BallClipRotateMultiple" value="5"/>
+            <flag name="BallPulseRise" value="6"/>
+            <flag name="BallRotate" value="7"/>
+            <flag name="CubeTransition" value="8"/>
+            <flag name="BallZigZag" value="9"/>
+            <flag name="BallZigZagDeflect" value="10"/>
+            <flag name="BallTrianglePath" value="11"/>
+            <flag name="BallScale" value="12"/>
+            <flag name="LineScale" value="13"/>
+            <flag name="LineScaleParty" value="14"/>
+            <flag name="BallScaleMultiple" value="15"/>
+            <flag name="BallPulseSync" value="16"/>
+            <flag name="BallBeat" value="17"/>
+            <flag name="LineScalePulseOut" value="18"/>
+            <flag name="LineScalePulseOutRapid" value="19"/>
+            <flag name="BallScaleRipple" value="20"/>
+            <flag name="BallScaleRippleMultiple" value="21"/>
+            <flag name="BallSpinFadeLoader" value="22"/>
+            <flag name="LineSpinFadeLoader" value="23"/>
+            <flag name="TriangleSkewSpin" value="24"/>
+            <flag name="Pacman" value="25"/>
+            <flag name="BallGridBeat" value="26"/>
+            <flag name="SemiCircleSpin" value="27"/>
+        </attr>
+        <attr format="color" name="indicator_color"/>
+    </declare-styleable><declare-styleable name="vericationCodeInput">
+
+        <attr format="integer" name="box"/>
+        <attr format="dimension" name="child_h_padding"/>
+        <attr format="dimension" name="child_v_padding"/>
+        <attr format="dimension" name="child_width"/>
+        <attr format="dimension" name="child_height"/>
+        <attr format="dimension" name="padding"/>
+        <attr format="reference" name="box_bg_focus"/>
+        <attr format="reference" name="box_bg_normal"/>
+        <attr format="string" name="inputType"/>
+    </declare-styleable></file><file path="C:\app\DialogDialog\dialogmodule\src\main\res\values\colors.xml" qualifiers=""><color name="colorPrimary">#008577</color><color name="colorPrimaryDark">#00574B</color><color name="colorAccent">#D81B60</color><color name="font_color_3">#FF333333</color><color name="font_color_4">#FFC19901</color><color name="font_color_6">#FF666666</color><color name="font_color_7">#FF777777</color><color name="font_color_8">#FFBBBBBB</color><color name="font_color_1">#FF000000</color><color name="font_color_9">#FF999999</color><color name="jifei">#ff2f80db</color><color name="commonbuttoncolor">#FF2f80db</color><color name="commonbuttoncolor_down">#cc2f80db</color><color name="commontextcolor">#20aee5</color><color name="commonkuangcolor">#ffffffff</color><color name="faildgray">#dddddd</color><color name="faildtextcolor">#333333</color><color name="guangbiaocolor">#cc2f80db</color><color name="cccc">#CCCCCC</color><color name="theme_blue">#20AEE5</color><color name="blue1">#106CDB</color><color name="white">#ffffff</color><color name="error_stroke_color">#F27474</color><color name="success_stroke_color">#A5DC86</color></file><file path="C:\app\DialogDialog\dialogmodule\src\main\res\values\strings.xml" qualifiers=""><string name="app_name">DialogMobile</string></file><file path="C:\app\DialogDialog\dialogmodule\src\main\res\values\styles.xml" qualifiers=""><style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style><style name="Dialog" parent="@android:style/Theme.Dialog">
+
+        
+        <item name="android:windowNoTitle">true</item>
+        
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.4</item>
+    </style><style name="DialogDim" parent="@android:style/Theme.Dialog">
+
+        
+        <item name="android:windowNoTitle">true</item>
+        
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style><style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/modal_in</item>
+        <item name="android:windowExitAnimation">@anim/modal_out</item>
+    </style><style name="DialogAnimationSlidTop">
+        <item name="android:windowEnterAnimation">@anim/dialog_slid_open_top</item>
+        <item name="android:windowExitAnimation">@anim/dialog_slid_close_top</item>
+    </style><style name="DialogAnimationSlidBottom">
+        <item name="android:windowEnterAnimation">@anim/dialog_slid_open_bottom</item>
+        <item name="android:windowExitAnimation">@anim/dialog_slid_close_bottom</item>
+    </style><style name="DialogAnimationSlidRight">
+        <item name="android:windowEnterAnimation">@anim/dialog_slid_open_right</item>
+        <item name="android:windowExitAnimation">@anim/dialog_slid_close_right</item>
+    </style><style name="kuang_button1">
+        <item name="android:layout_width">94dp</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@drawable/sel_text_p_blue_disable_gray</item>
+        <item name="android:background">@drawable/button_onclick</item>
+        <item name="android:layout_marginStart">15dp</item>
+        <item name="android:layout_marginEnd">15dp</item>
+        <item name="android:gravity">center</item>
+    </style><style name="StyleProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:minHeight">5dp</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">
+            @android:drawable/progress_indeterminate_horizontal
+        </item>
+        <item name="android:progressDrawable">@drawable/drawable_progressbar</item>
+    </style><style name="download_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/theme_blue</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        
+    </style></file><file name="file_paths" path="C:\app\DialogDialog\dialogmodule\src\main\res\xml\file_paths.xml" qualifiers="" type="xml"/></source><source path="C:\app\DialogDialog\dialogmodule\build\generated\res\rs\debug"/><source path="C:\app\DialogDialog\dialogmodule\build\generated\res\resValues\debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\app\DialogDialog\dialogmodule\src\debug\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\app\DialogDialog\dialogmodule\src\debug\res"/></dataSet><mergedItems><configuration qualifiers=""><declare-styleable name="vericationCodeInput">
+
+        <attr format="integer" name="box"/>
+        <attr format="dimension" name="child_h_padding"/>
+        <attr format="dimension" name="child_v_padding"/>
+        <attr format="dimension" name="child_width"/>
+        <attr format="dimension" name="child_height"/>
+        <attr format="dimension" name="padding"/>
+        <attr format="reference" name="box_bg_focus"/>
+        <attr format="reference" name="box_bg_normal"/>
+        <attr format="string" name="inputType"/>
+    </declare-styleable><declare-styleable name="AVLoadingIndicatorView">
+        <attr name="indicator">
+            <flag name="BallPulse" value="0"/>
+            <flag name="BallGridPulse" value="1"/>
+            <flag name="BallClipRotate" value="2"/>
+            <flag name="BallClipRotatePulse" value="3"/>
+            <flag name="SquareSpin" value="4"/>
+            <flag name="BallClipRotateMultiple" value="5"/>
+            <flag name="BallPulseRise" value="6"/>
+            <flag name="BallRotate" value="7"/>
+            <flag name="CubeTransition" value="8"/>
+            <flag name="BallZigZag" value="9"/>
+            <flag name="BallZigZagDeflect" value="10"/>
+            <flag name="BallTrianglePath" value="11"/>
+            <flag name="BallScale" value="12"/>
+            <flag name="LineScale" value="13"/>
+            <flag name="LineScaleParty" value="14"/>
+            <flag name="BallScaleMultiple" value="15"/>
+            <flag name="BallPulseSync" value="16"/>
+            <flag name="BallBeat" value="17"/>
+            <flag name="LineScalePulseOut" value="18"/>
+            <flag name="LineScalePulseOutRapid" value="19"/>
+            <flag name="BallScaleRipple" value="20"/>
+            <flag name="BallScaleRippleMultiple" value="21"/>
+            <flag name="BallSpinFadeLoader" value="22"/>
+            <flag name="LineSpinFadeLoader" value="23"/>
+            <flag name="TriangleSkewSpin" value="24"/>
+            <flag name="Pacman" value="25"/>
+            <flag name="BallGridBeat" value="26"/>
+            <flag name="SemiCircleSpin" value="27"/>
+        </attr>
+        <attr format="color" name="indicator_color"/>
+    </declare-styleable></configuration></mergedItems></merger>
