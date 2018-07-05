@@ -2,6 +2,7 @@ package x.com.dialogmobile.CheckUpdate;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -17,9 +18,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
-import java.net.SocketException;
 import java.net.URL;
-import java.net.UnknownHostException;
 
 import androidx.core.content.FileProvider;
 import x.com.dialogmobile.BuildConfig;
@@ -29,7 +28,6 @@ import x.com.dialogmobile.R;
 
 public class DownloadHelper {
 	private final String TAG = "download";
-
 	private static final int DOWNLOAD_ING = 1;
 	private static final int DOWNLOAD_OVER = 2;
 	private static final int DOWNLOAD_AGAIN = 3;
@@ -41,11 +39,9 @@ public class DownloadHelper {
 	private Boolean mIsCancle = false;
 	private Handler mProgressHandler;
 	private DownloadCallBack mDownloadCallBack;
-
-	private int mIsForce = 0;
+	private int mIsForce;
 	private PDialog2Builder mPDialog2Builder;
 	private Dialog mDialog;
-
 	private NotificationHelper mNotificationHelper;
 	private int mNotificationIconId;
 	private String mNotificationTitle;
@@ -66,7 +62,6 @@ public class DownloadHelper {
 		mSavePath = Environment.getExternalStorageDirectory() + "/" + "deanDownload";
 		mNotificationIconId = notificationIconId;
 		mNotificationTitle = notificationTitle;
-
 		mProgressHandler = new MyHandle(mActivity) {
 			@Override
 			public void handleMessage(Message msg) {
@@ -87,7 +82,6 @@ public class DownloadHelper {
 				}
 			}
 		};
-
 		startDownload();
 	}
 
@@ -96,7 +90,8 @@ public class DownloadHelper {
 	 */
 	public void startDownload(){
 		if(mNotificationHelper == null){
-			mNotificationHelper = new NotificationHelper(mActivity,  mNotificationIconId, mNotificationTitle, true);
+			mNotificationHelper = new NotificationHelper(mActivity, mNotificationTitle);
+			mNotificationHelper.setType(NotificationHelper.NOTIFICATION_TYPE_DOWNLOAD);
 			mNotificationHelper.setProgress(0, null);
 		}
 		//显示下载对话框
@@ -123,7 +118,6 @@ public class DownloadHelper {
 					}).setBtnCancelVisity(false);
 			mDialog = mPDialog2Builder.create();
 		}
-
 		mDialog.show();
 	}
 
@@ -147,7 +141,6 @@ public class DownloadHelper {
 						connection.connect();
 						InputStream is = connection.getInputStream();
 						int len = connection.getContentLength();//获取网络apk大小
-
 	//						//判断本地是否存在apk （此功能需要配合版本号使用）
 	//						if(apkFile.exists()){
 	//							long length = apkFile.length();//本地apk大小
@@ -161,7 +154,6 @@ public class DownloadHelper {
 	//						}else {
 	//							downloadApk(is, len, apkFile);
 	//						}
-
 						if(apkFile.exists()){
 							apkFile.delete();
 						}
@@ -180,11 +172,11 @@ public class DownloadHelper {
 
 	/**
 	 * 下载apk
-	 * @param is
-	 * @param len
-	 * @param apkFile
+	 * @param is 资源流
+	 * @param len 资源大小
+	 * @param apkFile 安装包
 	 */
-	public void downloadApk(InputStream is, int len, File apkFile){
+	private void downloadApk(InputStream is, int len, File apkFile){
 		//显示通知栏下载进度
 
 		mProgress = 0;
@@ -217,14 +209,14 @@ public class DownloadHelper {
 	}
 
 	/**
-	 *
+	 * @param apkFile 安装包
 	 */
-	public void downloadFail(File apkFile){
+	private void downloadFail(File apkFile){
 		if(apkFile.exists()){
 			apkFile.delete();
 		}
-		mDialog.dismiss();
-		mDownloadCallBack.downloadFail();
+		if(mDialog != null) mDialog.dismiss();
+		if(mDownloadCallBack != null) mDownloadCallBack.downloadFail();
 	}
 	/**
 	 * 重新下载
@@ -246,43 +238,46 @@ public class DownloadHelper {
      * 执行安装apk
      */
 	private void installAPK() {
+		if(mPDialog2Builder != null){
+			mPDialog2Builder.setProgress(100);
+			mPDialog2Builder.setBtnCancel("下次再说", new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					if(mDialog != null) mDialog.dismiss();
+					if(mDownloadCallBack != null) mDownloadCallBack.installCancel();
+				}
+			});
+			mPDialog2Builder.setBtnSure("立即安装", new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					installAPK();
+				}
+			});
+			mPDialog2Builder.setBtnVisity(mIsForce == 0, true);
+		}
 
-		mPDialog2Builder.setProgress(100);
-		mPDialog2Builder.setBtnCancel("下次再说", new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				mDialog.dismiss();
-				mDownloadCallBack.installCancel();
-			}
-		});
-		mPDialog2Builder.setBtnSure("立即安装", new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				installAPK();
-			}
-		});
-		mPDialog2Builder.setBtnVisity(mIsForce == 0, true);
 		try {
 			File apkFile = new File(mSavePath, mVersionName);
 			if (!apkFile.exists()) {
 				return;
 			}
-			mActivity.startActivity(getInstallApkIntent(apkFile));
+			Intent installApkIntent = getInstallApkIntent(apkFile);
+			if(mNotificationHelper != null) mNotificationHelper.setProgress(100, installApkIntent);
+			mActivity.startActivity(installApkIntent);
 		}catch (Exception e){
-			Toast.makeText(mActivity, "安装失败", Toast.LENGTH_SHORT);
+			Toast.makeText(mActivity, "安装失败", Toast.LENGTH_SHORT).show();
 		}
 	}
 
 	/**
 	 * 获取安装apk的Intent
-	 * @param apkFile
-	 * @return
+	 * @param apkFile 安装包
+	 * @return Intent 跳转意图
 	 */
 	private Intent getInstallApkIntent(File apkFile){
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		//版本在7.0以上是不能直接通过uri访问的
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
 			//参数1 上下文, 参数2 在AndroidManifest中的android:authorities值, 参数3  共享的文件
 			Uri apkUri = FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID+".fileProvider", apkFile);
 			//由于没有在Activity环境下启动Activity,设置下面的标签
@@ -301,7 +296,7 @@ public class DownloadHelper {
 		final WeakReference<Activity> activity;
 
 		MyHandle(Activity activity) {
-			this.activity = new WeakReference<Activity>(activity);
+			this.activity = new WeakReference<>(activity);
 		}
 
 		@Override
