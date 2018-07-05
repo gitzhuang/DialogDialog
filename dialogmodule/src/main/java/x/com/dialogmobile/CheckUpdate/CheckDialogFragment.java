@@ -1,15 +1,16 @@
 package x.com.dialogmobile.CheckUpdate;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import x.com.dialogmobile.NDialogBuilder;
@@ -23,7 +24,6 @@ public class CheckDialogFragment extends DialogFragment {
     private final String[] mPermissionList_O = new String[]{
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.REQUEST_INSTALL_PACKAGES,
     };
 
 
@@ -52,15 +52,16 @@ public class CheckDialogFragment extends DialogFragment {
         this.callback = callback;
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d("TAG", "onCreateDialog: " + this.toString());
-        return new NDialogBuilder(getContext(), layoutStyle, 1.0f)
+        Dialog dialog = new NDialogBuilder(getContext(), layoutStyle, 1.0f)
                 .setTouchOutSideCancelable(false)
                 .setMessage(msg, NDialogBuilder.MSG_LAYOUT_LEFT)
                 .setDialogAnimation(NDialogBuilder.DIALOG_ANIM_NORMAL)
                 .setTitle("发现新版本")
-                .setBtnClickListener(true, isforce == 1 ? "退出程序" : "稍后更新" , "立即更新",
+                .setBtnClickListener(true, isforce == 1 ? "退出程序" : "稍后更新", "立即更新",
                         new NDialogBuilder.onDialogbtnClickListener() {
                             @Override
                             public void onDialogbtnClick(Context context, final Dialog dialog, int whichBtn) {
@@ -70,13 +71,14 @@ public class CheckDialogFragment extends DialogFragment {
                                             System.exit(0);
                                         } else {
                                             callback.onCancel();
+                                            dismiss();
                                         }
                                         break;
                                     case 2://立即更新
-                                        PermissionHelper.getInstance().requestPermission(
+                                        PermissionHelper.getInstance().applyPermission(
                                                 CheckDialogFragment.this,
                                                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? mPermissionList_O : mPermissionList,
-                                                new PermissionHelper.RequestPermissionCallBack(){
+                                                new PermissionHelper.RequestPermissionCallBack() {
 
                                                     @Override
                                                     public void requestPermissionAgainHint() {
@@ -85,6 +87,7 @@ public class CheckDialogFragment extends DialogFragment {
 
                                                     @Override
                                                     public void requestPermissionSuccess() {
+                                                        dismiss();
                                                         downloadHelper = new DownloadHelper(
                                                                 activity,
                                                                 downloadUrl,
@@ -129,6 +132,7 @@ public class CheckDialogFragment extends DialogFragment {
 
                                                     @Override
                                                     public void requestPermissionFail() {
+                                                        dismiss();
                                                         Toast.makeText(activity, "权限申请失败", Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
@@ -138,13 +142,20 @@ public class CheckDialogFragment extends DialogFragment {
                             }
                         })
                 .create();
+        //屏蔽返回键
+        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+                return keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK;
+            }
+        });
+        return dialog;
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionHelper.getInstance().requestPermissionsResult(getContext(), requestCode, permissions, grantResults);
-        dismiss();
+        PermissionHelper.getInstance().requestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override

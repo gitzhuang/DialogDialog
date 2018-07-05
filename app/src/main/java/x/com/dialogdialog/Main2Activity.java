@@ -1,6 +1,9 @@
 package x.com.dialogdialog;
 
 import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -30,10 +33,38 @@ public class Main2Activity extends AppCompatActivity {
                     }
                 }).show(getSupportFragmentManager(), "checkup");
 
-        new NotificationHelper(this,  R.mipmap.icon_error, "测试", false)
-                .setContent("测试内容")
-                .setDefaults(NotificationCompat.DEFAULT_SOUND)
+        //优先级default（3）
+        new NotificationHelper(this, "默认通知")
+                .setContent("测试1")//通知内容
+                .setDefaults(Notification.DEFAULT_ALL)//设置提醒方式
+                .setType(NotificationHelper.NOTIFICATION_TYPE_NORMAL)//通知类型
+                .setSmallIcon(R.mipmap.ic_launcher)//
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.icon_error))
+                .setContextIntent(new Intent(Intent.ACTION_SEND))//设置跳转
                 .notifyShow();
+
+        //优先级min（1）
+        new NotificationHelper(this, "其他")
+                .setContent("测试1")//通知内容
+                .setDefaults(Notification.DEFAULT_ALL)//设置提醒方式
+                .setType(NotificationHelper.NOTIFICATION_TYPE_OTHER)//通知类型
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.icon_error))
+                .setContextIntent(new Intent(Intent.ACTION_SEND))
+                .notifyShow();
+
+        //优先级low（2）
+        NotificationHelper notificationHelper = new NotificationHelper(this, "下载通知")
+                .setContent("测试1")//通知内容
+                .setDefaults(Notification.DEFAULT_ALL)//设置提醒方式
+                .setType(NotificationHelper.NOTIFICATION_TYPE_DOWNLOAD)//通知类型
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.icon_error));
+        notificationHelper.setProgress(50, new Intent(Intent.ACTION_SEND));
+        notificationHelper.cancel();
+        notificationHelper.notifyShow();
+
+        NotificationHelper.cancelAll(this);
 
     }
 
