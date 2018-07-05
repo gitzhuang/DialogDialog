@@ -61,10 +61,10 @@ public class Main2Activity extends AppCompatActivity {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.icon_error));
         notificationHelper.setProgress(50, new Intent(Intent.ACTION_SEND));
+        notificationHelper.cancel();
         notificationHelper.notifyShow();
 
-
-
+        NotificationHelper.cancelAll(this);
 
     }
 

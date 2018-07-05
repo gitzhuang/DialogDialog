@@ -69,8 +69,8 @@ public class NotificationHelper {
     }
 
     /**
-     * 设置大图标
-     * @param smallIconId 大图标
+     * 设置小图标
+     * @param smallIconId 小图标
      */
     public NotificationHelper setSmallIcon(int smallIconId){
         mBuilder.setSmallIcon(smallIconId);
@@ -97,6 +97,13 @@ public class NotificationHelper {
         return this;
     }
 
+    /**
+     * 通知类型
+     * NOTIFICATION_TYPE_NORMAL
+     * NOTIFICATION_TYPE_DOWNLOAD
+     * NOTIFICATION_TYPE_OTHER
+     * @param notificationType 通知类型
+     */
     public NotificationHelper setType(int notificationType){
         if(notificationType == NOTIFICATION_TYPE_DOWNLOAD){
             //类型为下载
@@ -107,6 +114,24 @@ public class NotificationHelper {
             //默认设置
         }
         return this;
+    }
+
+    /**
+     * 取消通知
+     */
+    public void cancel(){
+        if(mNotifyManager != null){
+            mNotifyManager.cancel(mNotificationId);
+        }
+    };
+
+    /**
+     * 静态方法 清除所以通知
+     * @param context
+     */
+    public static void cancelAll(Context context){
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        if(notificationManager != null) notificationManager.cancelAll();
     }
 
     /**
@@ -126,7 +151,7 @@ public class NotificationHelper {
 
     /**
      *
-     * @param defaults 默认提醒
+     * @param defaults 提醒方式
      * @return
      *
      * Notification.DEFAULT_VIBRATE //添加默认震动提醒 需要 VIBRATE permission
@@ -147,9 +172,6 @@ public class NotificationHelper {
      * 刷新显示通知
      */
     public void notifyShow(){
-        if(mNotifyManager == null){
-            mNotifyManager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
-        }
         //区分开下载通知，根据当前时间可以直接show出多个应用通知
         if(mNotificationId != NOTIFICATION_ID_DOWNLOAD){
             mNotificationId = (int) System.currentTimeMillis();
