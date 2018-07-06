@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\app\\DialogDialog\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-land\\values-land.xml",
+            "outputFile": "/Users/hao/Downloads/DialogDialog/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-land/values-land.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\XXing\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-1.0.0-beta01.aar\\5c8c72d1054e5713d5c6ccca4c5f9362\\res\\values-land\\values-land.xml",
+                    "source": "/Users/hao/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0-alpha3.aar/03480d22592cb56dfbcda190dec61f55/res/values-land/values-land.xml",
                     "from": {
                         "startLines": "2,3,4",
                         "startColumns": "4,4,4",

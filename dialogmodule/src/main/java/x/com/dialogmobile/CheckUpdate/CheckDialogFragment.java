@@ -37,12 +37,15 @@ public class CheckDialogFragment extends DialogFragment {
     private String notificationTitle;
     private OnCheckcallback callback;
     private DownloadHelper downloadHelper;
+    private String downloadFailMessgae;
 
     public interface OnCheckcallback {
         void onCancel();
     }
 
-    public CheckDialogFragment(AppCompatActivity activity, String msg, int layoutStyle, String downloadUrl, int isforce, int notificationIconId, String notificationTitle, CheckDialogFragment.OnCheckcallback callback) {
+    public CheckDialogFragment(AppCompatActivity activity, String msg, int layoutStyle, String downloadUrl,
+                               int isforce, int notificationIconId, String notificationTitle, String downloadFailMessgae,
+                               CheckDialogFragment.OnCheckcallback callback) {
         this.activity = activity;
         this.layoutStyle = layoutStyle;
         this.downloadUrl = downloadUrl;
@@ -50,6 +53,7 @@ public class CheckDialogFragment extends DialogFragment {
         this.msg = msg;
         this.notificationIconId = notificationIconId;
         this.notificationTitle = notificationTitle;
+        this.downloadFailMessgae = downloadFailMessgae;
         this.callback = callback;
     }
 
@@ -84,6 +88,7 @@ public class CheckDialogFragment extends DialogFragment {
                                                     public void requestPermissionAgainHint() {
                                                         Toast.makeText(activity, "此功能需要允许存储权限，才能正常使用。", Toast.LENGTH_LONG).show();
                                                     }
+
                                                     @Override
                                                     public void requestPermissionSuccess() {
                                                         dismiss();
@@ -114,7 +119,7 @@ public class CheckDialogFragment extends DialogFragment {
                                                                                 new NDialogBuilder(activity, 0, 1.0f)
                                                                                         .setTitle("下载失败")
                                                                                         .setTouchOutSideCancelable(false)
-                                                                                        .setMessage("123", NDialogBuilder.MSG_LAYOUT_LEFT)
+                                                                                        .setMessage(downloadFailMessgae, NDialogBuilder.MSG_LAYOUT_LEFT)
                                                                                         .setDialogAnimation(NDialogBuilder.DIALOG_ANIM_NORMAL)
                                                                                         .setBtnClickListener(true, "重新下载", new NDialogBuilder.onDialogbtnClickListener() {
                                                                                             @Override

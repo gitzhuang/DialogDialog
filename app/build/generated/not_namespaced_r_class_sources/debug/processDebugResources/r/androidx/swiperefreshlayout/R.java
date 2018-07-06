@@ -12,7 +12,6 @@ public final class R {
     public static final class attr {
         private attr() {}
 
-        public static final int alpha = 0x7f020027;
         public static final int font = 0x7f02007a;
         public static final int fontProviderAuthority = 0x7f02007c;
         public static final int fontProviderCerts = 0x7f02007d;
@@ -141,10 +140,6 @@ public final class R {
     public static final class styleable {
         private styleable() {}
 
-        public static final int[] ColorStateListItem = { 0x10101a5, 0x101031f, 0x7f020027 };
-        public static final int ColorStateListItem_android_color = 0;
-        public static final int ColorStateListItem_android_alpha = 1;
-        public static final int ColorStateListItem_alpha = 2;
         public static final int[] FontFamily = { 0x7f02007c, 0x7f02007d, 0x7f02007e, 0x7f02007f, 0x7f020080, 0x7f020081 };
         public static final int FontFamily_fontProviderAuthority = 0;
         public static final int FontFamily_fontProviderCerts = 1;
@@ -163,21 +158,5 @@ public final class R {
         public static final int FontFamilyFont_fontVariationSettings = 7;
         public static final int FontFamilyFont_fontWeight = 8;
         public static final int FontFamilyFont_ttcIndex = 9;
-        public static final int[] GradientColor = { 0x101019d, 0x101019e, 0x10101a1, 0x10101a2, 0x10101a3, 0x10101a4, 0x1010201, 0x101020b, 0x1010510, 0x1010511, 0x1010512, 0x1010513 };
-        public static final int GradientColor_android_startColor = 0;
-        public static final int GradientColor_android_endColor = 1;
-        public static final int GradientColor_android_type = 2;
-        public static final int GradientColor_android_centerX = 3;
-        public static final int GradientColor_android_centerY = 4;
-        public static final int GradientColor_android_gradientRadius = 5;
-        public static final int GradientColor_android_tileMode = 6;
-        public static final int GradientColor_android_centerColor = 7;
-        public static final int GradientColor_android_startX = 8;
-        public static final int GradientColor_android_startY = 9;
-        public static final int GradientColor_android_endX = 10;
-        public static final int GradientColor_android_endY = 11;
-        public static final int[] GradientColorItem = { 0x10101a5, 0x1010514 };
-        public static final int GradientColorItem_android_color = 0;
-        public static final int GradientColorItem_android_offset = 1;
     }
 }
