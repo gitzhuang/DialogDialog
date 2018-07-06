@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import x.com.dialogmobile.NDialogBuilder;
+import x.com.dialogmobile.PermissionHelper;
 
 public class CheckDialogFragment extends DialogFragment {
     private final String[] mPermissionList = new String[]{
@@ -37,7 +38,7 @@ public class CheckDialogFragment extends DialogFragment {
     private OnCheckcallback callback;
     private DownloadHelper downloadHelper;
 
-    public interface OnCheckcallback{
+    public interface OnCheckcallback {
         void onCancel();
     }
 
@@ -79,12 +80,10 @@ public class CheckDialogFragment extends DialogFragment {
                                                 CheckDialogFragment.this,
                                                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? mPermissionList_O : mPermissionList,
                                                 new PermissionHelper.RequestPermissionCallBack() {
-
                                                     @Override
                                                     public void requestPermissionAgainHint() {
                                                         Toast.makeText(activity, "此功能需要允许存储权限，才能正常使用。", Toast.LENGTH_LONG).show();
                                                     }
-
                                                     @Override
                                                     public void requestPermissionSuccess() {
                                                         dismiss();
@@ -136,7 +135,6 @@ public class CheckDialogFragment extends DialogFragment {
                                                         Toast.makeText(activity, "权限申请失败", Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
-
                                         break;
                                 }
                             }

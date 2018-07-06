@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ver="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <x.com.dialogmobile.VerificationCodeInput
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="16dp"
+        ver:box="5"
+        ver:box_bg_focus="@drawable/verification_edit_bg_focus"
+        ver:box_bg_normal="@drawable/verification_edit_bg_normal"
+        ver:child_h_padding="5dp"
+        ver:inputType="password" />
+</LinearLayout>
