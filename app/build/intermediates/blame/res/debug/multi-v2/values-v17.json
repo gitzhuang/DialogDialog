@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\app\\DialogDialog\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v17\\values-v17.xml",
+            "outputFile": "/Users/hao/Downloads/DialogDialog/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v17/values-v17.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\XXing\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-1.0.0-beta01.aar\\5c8c72d1054e5713d5c6ccca4c5f9362\\res\\values-v17\\values-v17.xml",
+                    "source": "/Users/hao/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0-alpha3.aar/03480d22592cb56dfbcda190dec61f55/res/values-v17/values-v17.xml",
                     "from": {
                         "startLines": "2,5,9,12,15,18,22,25,29,33,37,40,43,46,50,53,57",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",

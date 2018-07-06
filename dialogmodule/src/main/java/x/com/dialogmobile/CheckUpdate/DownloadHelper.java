@@ -227,7 +227,7 @@ class DownloadHelper {
         }
     }
 
-    /*
+	/*
      * 执行安装apk
      */
     private void installAPK() {
@@ -249,18 +249,18 @@ class DownloadHelper {
             mPDialog2Builder.setBtnVisity(mIsForce == 0, true);
         }
 
-        try {
-            File apkFile = new File(mSavePath, mVersionName);
-            if (!apkFile.exists()) {
-                return;
-            }
-            Intent installApkIntent = getInstallApkIntent(apkFile);
-            if (mNotificationHelper != null) mNotificationHelper.setProgress(100, installApkIntent);
-            mActivity.startActivity(installApkIntent);
-        } catch (Exception e) {
-            Toast.makeText(mActivity, "安装失败", Toast.LENGTH_SHORT).show();
-        }
-    }
+		try {
+			File apkFile = new File(mSavePath, mVersionName);
+			if (!apkFile.exists()) {
+				return;
+			}
+			Intent installApkIntent = getInstallApkIntent(apkFile);
+			if(mNotificationHelper != null) mNotificationHelper.setProgress(100, installApkIntent);
+			mActivity.startActivity(installApkIntent);
+		}catch (Exception e){
+			Toast.makeText(mActivity, "安装失败", Toast.LENGTH_SHORT).show();
+		}
+	}
 
     /**
      * 获取安装apk的Intent

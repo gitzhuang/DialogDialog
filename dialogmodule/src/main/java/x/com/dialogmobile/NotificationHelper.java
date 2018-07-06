@@ -10,21 +10,30 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.util.Log;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import androidx.annotation.IntDef;
 import androidx.core.app.NotificationCompat;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class NotificationHelper {
-    public static final int NOTIFICATION_REQUEST_CODE = 0x001;
+    private static final int NOTIFICATION_REQUEST_CODE = 0x001;
     public static final int NOTIFICATION_TYPE_NORMAL = 0x0011;
     public static final int NOTIFICATION_TYPE_DOWNLOAD = 0x012;
     public static final int NOTIFICATION_TYPE_OTHER = 0x013;
+    public static final int NOTIFICATION_TYPE_DIALOG = 0x014;
     private static final String NOTIFICATION_CHANNEL_ID_OTHER = "other";
     private static final String NOTIFICATION_CHANNEL_ID_NORMAL = "normal";
     private static final String NOTIFICATION_CHANNEL_ID_DOWNLOAD = "download";
+    private static final String NOTIFICATION_CHANNEL_ID_DIALOG = "dialog";
     private static final String NOTIFICATION_CHANNEL_NAME_OTHER = "其他";//优先级1 min
     private static final String NOTIFICATION_CHANNEL_NAME_NORMAL = "应用通知";//优先级3 default
     private static final String NOTIFICATION_CHANNEL_NAME_DOWNLOAD = "下载通知";//优先级2 low
+    private static final String NOTIFICATION_CHANNEL_NAME_DIALOG = "应用内通知";//优先级4 high
 
     private static int NOTIFICATION_ID_DOWNLOAD = 2002;//推送id，相同会覆盖
     private Context mContext;
@@ -34,6 +43,17 @@ public class NotificationHelper {
     private int mNotificationId;
     private String mPushChannelName;
     private String mPushChannelId;
+
+    @IntDef({
+            NOTIFICATION_TYPE_NORMAL,
+            NOTIFICATION_TYPE_DOWNLOAD,
+            NOTIFICATION_TYPE_OTHER,
+            NOTIFICATION_TYPE_DIALOG
+    })
+    @Target(ElementType.PARAMETER)
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Type {
+    }
 
     /**
      * @param context      上下文
@@ -105,15 +125,27 @@ public class NotificationHelper {
      *
      * @param notificationType 通知类型
      */
-    public NotificationHelper setType(int notificationType) {
-        if (notificationType == NOTIFICATION_TYPE_DOWNLOAD) {
+    public NotificationHelper setType(@Type int notificationType){
+        if(notificationType == NOTIFICATION_TYPE_DOWNLOAD){
             //类型为下载
             downloadSetting();
         } else if (notificationType == NOTIFICATION_TYPE_OTHER) {
             otherSetting();
-        } else {
+        } else if (notificationType == NOTIFICATION_TYPE_DIALOG){
+            dialogSetting();
+        }else {
             //默认设置
         }
+        return this;
+    }
+
+    /**
+     * 设置通知id，不能为0
+     * @param notificationId
+     * @return
+     */
+    public NotificationHelper setNotificationId(int notificationId){
+        mNotificationId = notificationId;
         return this;
     }
 
@@ -124,6 +156,15 @@ public class NotificationHelper {
         if (mNotifyManager != null) {
             mNotifyManager.cancel(mNotificationId);
         }
+    }
+
+    /**
+     * 静态方法 根据id清除通知
+     * @param context
+     */
+    public static void cancelById(Context context, int id){
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        if(notificationManager != null) notificationManager.cancel(id);
     }
 
     /**
@@ -142,6 +183,7 @@ public class NotificationHelper {
      * Notification.PRIORITY_LOW
      * Notification.PRIORITY_MAX(优先级为2)
      * Notification.PRIORITY_MIN(优先级为-2)
+     *
      * Oreo不用Priority了，用importance
      * IMPORTANCE_NONE 关闭通知
      * IMPORTANCE_MIN 开启通知，不会弹出，但没有提示音，状态栏中无显示
@@ -151,6 +193,7 @@ public class NotificationHelper {
      */
 
     /**
+     *
      * @param defaults 提醒方式
      * @return Notification.DEFAULT_VIBRATE //添加默认震动提醒 需要 VIBRATE permission
      * <p>
@@ -159,6 +202,7 @@ public class NotificationHelper {
      * Notification.DEFAULT_LIGHTS// 添加默认三色灯提醒
      * <p>
      * Notification.DEFAULT_ALL// 添加默认以上3种全部提醒
+
      */
     public NotificationHelper setDefaults(int defaults) {
         mBuilder.setDefaults(defaults);
@@ -170,7 +214,7 @@ public class NotificationHelper {
      */
     public void notifyShow() {
         //区分开下载通知，根据当前时间可以直接show出多个应用通知
-        if (mNotificationId != NOTIFICATION_ID_DOWNLOAD) {
+        if (mNotificationId != 0) {
             mNotificationId = (int) System.currentTimeMillis();
         }
         mNotifyManager.notify(mNotificationId, mBuilder.build());
@@ -178,6 +222,7 @@ public class NotificationHelper {
 
     /**
      * 初始化通知
+     *
      */
     private void initNotification(String contentTitle) {
         //默认设置
@@ -206,7 +251,7 @@ public class NotificationHelper {
     private void downloadSetting() {
         mPushChannelName = NOTIFICATION_CHANNEL_NAME_DOWNLOAD;
         mPushChannelId = NOTIFICATION_CHANNEL_ID_DOWNLOAD;
-        mNotificationId = NOTIFICATION_ID_DOWNLOAD;//控制更新在同一条推送上
+        mNotificationId = (int) System.currentTimeMillis();//控制更新在同一条推送上
         //设置本次推送走那个通道
         mBuilder.setChannelId(mPushChannelId);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -226,7 +271,7 @@ public class NotificationHelper {
     private void otherSetting() {
         mPushChannelName = NOTIFICATION_CHANNEL_NAME_OTHER;
         mPushChannelId = NOTIFICATION_CHANNEL_ID_OTHER;
-        //设置本次推送走那个通道
+        //设置本次推送走哪个通道
         mBuilder.setChannelId(mPushChannelId);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mNotificationChannel = new NotificationChannel(mPushChannelId, mPushChannelName, NotificationManager.IMPORTANCE_MIN);
@@ -235,6 +280,22 @@ public class NotificationHelper {
             mNotifyManager.createNotificationChannel(mNotificationChannel);
         } else {
             mBuilder.setPriority(NotificationCompat.PRIORITY_MIN);
+        }
+    }
+
+    /**
+     * 应用内通知 配置
+     */
+    private void dialogSetting(){
+        mPushChannelName = NOTIFICATION_CHANNEL_NAME_DIALOG;
+        mPushChannelId = NOTIFICATION_CHANNEL_ID_DIALOG;
+        //设置本次推送走哪个通道
+        mBuilder.setChannelId(mPushChannelId);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mNotificationChannel = new NotificationChannel(mPushChannelId, mPushChannelName, NotificationManager.IMPORTANCE_HIGH);
+            mNotifyManager.createNotificationChannel(mNotificationChannel);
+        }else {
+            mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
         }
     }
 
@@ -261,4 +322,5 @@ public class NotificationHelper {
             mNotifyManager.notify(mNotificationId, mBuilder.build());
         }
     }
+
 }

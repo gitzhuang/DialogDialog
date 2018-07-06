@@ -42,8 +42,9 @@ public class PermissionHelper {
     }
 
     private void applyPermission(Activity activity, Fragment fragment, String[] permissionList, RequestPermissionCallBack permissionCallBack){
-        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M && (fragment != null || activity != null)){
-            mPermissionCallBack = permissionCallBack;
+        mPermissionCallBack = permissionCallBack;
+        //6.0及以上 申请权限
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M && (fragment != null || activity != null)) {
             boolean isNeedApply = false;
             for (String permission : permissionList) {
                 if (ContextCompat.checkSelfPermission(activity == null ? fragment.getContext() : activity, permission) != PERMISSION_GRANTED) {
@@ -51,7 +52,7 @@ public class PermissionHelper {
                     break;
                 }
             }
-            if(isNeedApply){
+            if (isNeedApply) {
                 //如果应用之前请求过此权限但用户拒绝了请求，此方法将返回 true。
                 for (String permission : permissionList) {
                     if (activity == null ? fragment.shouldShowRequestPermissionRationale(permission)
@@ -62,15 +63,17 @@ public class PermissionHelper {
                     }
                 }
                 //申请权限，字符串数组内是一个或多个要申请的权限，1是申请权限结果的返回参数，在onRequestPermissionsResult可以得知申请结果
-                if(activity != null){
+                if (activity != null) {
                     activity.requestPermissions(permissionList, REQUESTCODE);
-                }else {
+                } else {
                     fragment.requestPermissions(permissionList, REQUESTCODE);
                 }
-
-            }else {
+            } else {
                 mPermissionCallBack.requestPermissionSuccess();
             }
+        } else {
+            //6.0以下直接执行
+            mPermissionCallBack.requestPermissionSuccess();
         }
     }
 

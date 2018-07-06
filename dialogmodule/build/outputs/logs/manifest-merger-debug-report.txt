@@ -1,63 +1,63 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:2:1-26:12
+ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:2:1-26:12
+INJECTED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:2:1-26:12
+INJECTED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:2:1-26:12
 	package
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:3:5-33
-		INJECTED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml
-		INJECTED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:3:5-33
+		INJECTED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml
+		INJECTED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml
 	xmlns:android
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:2:11-69
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:2:11-69
 uses-permission#android.permission.INTERNET
-ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:4:5-66
+ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:4:5-66
 	android:name
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:4:22-64
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:4:22-64
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:5:5-80
+ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:5:5-80
 	android:name
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:5:22-78
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:5:22-78
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
-ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:6:5-79
+ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:6:5-79
 	android:name
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:6:22-77
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:6:22-77
 uses-permission#android.permission.REQUEST_INSTALL_PACKAGES
-ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:7:5-82
+ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:7:5-82
 	android:name
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:7:22-80
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:7:22-80
 application
-ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:9:5-25:19
+ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:9:5-25:19
 	android:label
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:11:9-41
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:11:9-41
 	android:allowBackup
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:10:9-35
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:10:9-35
 provider#x.com.dialogmobile.CheckUpdate.CheckProvider
-ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:15:9-23:20
+ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:15:9-23:20
 	android:grantUriPermissions
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:18:13-47
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:18:13-47
 	android:authorities
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:17:13-66
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:17:13-66
 	android:exported
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:19:13-37
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:19:13-37
 	android:name
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:16:13-54
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:16:13-54
 meta-data#android.support.FILE_PROVIDER_PATHS
-ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:20:13-22:54
+ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:20:13-22:54
 	android:resource
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:22:17-51
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:22:17-51
 	android:name
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml:21:17-67
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml:21:17-67
 uses-sdk
-INJECTED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml
-INJECTED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml
-INJECTED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml
-INJECTED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml
+INJECTED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml
+INJECTED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml
+INJECTED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml
+INJECTED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml
-		INJECTED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml
+		INJECTED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml
+		INJECTED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml
-		ADDED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml
-		INJECTED from C:\app\DialogDialog\dialogmodule\src\main\AndroidManifest.xml
+		INJECTED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml
+		ADDED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml
+		INJECTED from /Users/hao/Downloads/DialogDialog/dialogmodule/src/main/AndroidManifest.xml
