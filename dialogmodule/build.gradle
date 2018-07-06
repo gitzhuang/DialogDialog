@@ -27,5 +27,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.0-alpha3'
     implementation 'com.wang.avi:library:2.1.3'
 
+
 }
 
