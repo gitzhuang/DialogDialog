@@ -3,10 +3,15 @@ package x.com.dialogdialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.text.InputType
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import x.com.dialogmobile.EDialogBuilder
 import x.com.dialogmobile.NDialogBuilder
 
+/**
+ * 基本弹窗
+ */
 class NormalDialogActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +27,8 @@ class NormalDialogActivity : AppCompatActivity() {
                 }
                 .create()
                 .show()
+
+
     }
 }
 

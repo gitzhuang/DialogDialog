@@ -31,7 +31,7 @@ class DownloadHelper {
     private final String TAG = "download";
     private static final int DOWNLOAD_ING = 1;
     private static final int DOWNLOAD_OVER = 2;
-    private static final int DOWNLOAD_AGAIN = 3;
+//    private static final int DOWNLOAD_AGAIN = 3;
     private String mVersionName;
     private String mDownloadUrl;
     private Activity mActivity;
@@ -80,9 +80,9 @@ class DownloadHelper {
                         }
                         installAPK();
                         break;
-                    case DOWNLOAD_AGAIN:
-                        showReDownload();
-                        break;
+//                    case DOWNLOAD_AGAIN:
+//                        showReDownload();
+//                        break;
                 }
             }
         };
@@ -109,7 +109,7 @@ class DownloadHelper {
      */
     private void showDialog() {
         if (mDialog == null || mPDialog2Builder == null) {
-            mPDialog2Builder = new PDialog2Builder(mActivity, R.layout.download_progress_layout, 1f)
+            mPDialog2Builder = new PDialog2Builder(mActivity, 0, 1f)
                     .setMessage("正在下载：")
                     .setTouchOutSideCancelable(false)
                     .setBtnCancel("取消下载", new View.OnClickListener() {
@@ -119,7 +119,9 @@ class DownloadHelper {
                             mDialog.dismiss();
                             mDownloadCallBack.downloadCancel();
                         }
-                    }).setBtnCancelVisity(false);
+                    })
+                    .setBtnVisity(false, true);
+//                    .setBtnCancelVisity(false);
             mDialog = mPDialog2Builder.create();
         }
         mDialog.show();
@@ -211,23 +213,24 @@ class DownloadHelper {
         if (mDownloadCallBack != null) mDownloadCallBack.downloadFail();
     }
 
-    /**
-     * 重新下载
-     */
-    private void showReDownload() {
-        if (mPDialog2Builder != null) {
-            mPDialog2Builder.setBtnSure("重新下载", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    view.setVisibility(View.GONE);
-                    getApkResource();
-                }
-            });
-            mPDialog2Builder.setBtnSureVisity(true);
-        }
-    }
+//    /**
+//     * 重新下载
+//     */
+//    private void showReDownload() {
+//        if (mPDialog2Builder != null) {
+//            mPDialog2Builder.setBtnSure("重新下载", new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    view.setVisibility(View.GONE);
+//                    getApkResource();
+//                }
+//            });
+////            mPDialog2Builder.setBtnSureVisity(true);
+//            mPDialog2Builder.setBtnVisity(true, true);
+//        }
+//    }
 
-	/*
+    /*
      * 执行安装apk
      */
     private void installAPK() {
@@ -249,18 +252,18 @@ class DownloadHelper {
             mPDialog2Builder.setBtnVisity(mIsForce == 0, true);
         }
 
-		try {
-			File apkFile = new File(mSavePath, mVersionName);
-			if (!apkFile.exists()) {
-				return;
-			}
-			Intent installApkIntent = getInstallApkIntent(apkFile);
-			if(mNotificationHelper != null) mNotificationHelper.setProgress(100, installApkIntent);
-			mActivity.startActivity(installApkIntent);
-		}catch (Exception e){
-			Toast.makeText(mActivity, "安装失败", Toast.LENGTH_SHORT).show();
-		}
-	}
+        try {
+            File apkFile = new File(mSavePath, mVersionName);
+            if (!apkFile.exists()) {
+                return;
+            }
+            Intent installApkIntent = getInstallApkIntent(apkFile);
+            if (mNotificationHelper != null) mNotificationHelper.setProgress(100, installApkIntent);
+            mActivity.startActivity(installApkIntent);
+        } catch (Exception e) {
+            Toast.makeText(mActivity, "安装失败", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     /**
      * 获取安装apk的Intent

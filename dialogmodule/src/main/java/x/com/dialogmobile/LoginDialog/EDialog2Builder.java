@@ -1,8 +1,13 @@
-package x.com.dialogmobile;
+package x.com.dialogmobile.LoginDialog;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -11,7 +16,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class NDialogBuilder {
+import x.com.dialogmobile.R;
+
+/**
+ * 验证码输入框
+ */
+public class EDialog2Builder {
     /**
      * 对话框处于屏幕顶部位置
      */
@@ -64,6 +74,16 @@ public class NDialogBuilder {
     private Dialog dialog;
     private Context context;
     private TextView dialogTitle, dialogMsg;
+    private SecurityCodeView editText;
+    private String inputcode = "";
+    private Button btnConfirm, btnCancel;
+    private onInputFinishListener inputFinish;
+    private onOutTimeListener outtime;
+    private Handler finishhandler;
+    private static final int INPUT_FINISH = 1;
+    private static final int OUTTIME = 2;
+    private CountDownTimer timer;
+    private boolean isrun = false;
 
     /**
      * 构造器
@@ -72,7 +92,7 @@ public class NDialogBuilder {
      * @param layoutStyle      对话框布局样式
      * @param widthcoefficient 对话框宽度时占屏幕宽度的比重（0-1）
      */
-    public NDialogBuilder(Context context, int layoutStyle, float widthcoefficient) {
+    public EDialog2Builder(Context context, int layoutStyle, float widthcoefficient) {
         this(context, layoutStyle, false, widthcoefficient, ALPHAFACTOR, dimEnable);
     }
 
@@ -85,7 +105,8 @@ public class NDialogBuilder {
      * @param widthcoefficient 对话框宽度所占屏幕宽度的比重（0-1）
      * @param alpha            对话框透明度
      */
-    private NDialogBuilder(Context context, int layoutStyle, boolean isSystemAlert, float widthcoefficient, float alpha, boolean dimEnable) {
+    @SuppressLint("HandlerLeak")
+    private EDialog2Builder(Context context, int layoutStyle, boolean isSystemAlert, float widthcoefficient, float alpha, boolean dimEnable) {
         Dialog dialog;
         if (dimEnable) {
             dialog = new Dialog(context, R.style.Dialog);
@@ -94,7 +115,7 @@ public class NDialogBuilder {
         }
         // 设置对话框风格
         if (layoutStyle == 0) {
-            layoutStyle = R.layout.ndialog_layout;
+            layoutStyle = R.layout.edialog2_layout;
         }
         dialog.setContentView(layoutStyle);
         Window window = dialog.getWindow();
@@ -123,13 +144,51 @@ public class NDialogBuilder {
             lp.alpha = ALPHAFACTOR;
         }
         window.setAttributes(lp);
+
+        editText = dialog.findViewById(R.id.edit_security_code);
+        editText.setInputCompleteListener(new SecurityCodeView.InputCompleteListener() {
+            @Override
+            public void inputComplete() {
+                inputcode = editText.getEditContent();
+                finishhandler.sendEmptyMessage(INPUT_FINISH);
+            }
+
+            @Override
+            public void deleteContent(boolean isDelete) {
+            }
+        });
+        btnConfirm = dialog.findViewById(R.id.mdialog_btn1);
+        btnCancel = dialog.findViewById(R.id.mdialog_btn2);
         this.dialog = dialog;
         this.context = context;
+
+        finishhandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case INPUT_FINISH:
+                        if (inputFinish != null) {
+                            inputFinish.onInputFinish(inputcode);
+                        }
+                        break;
+                    case OUTTIME:
+                        btnConfirm.setText("点击重新获取");
+                        btnConfirm.setBackgroundResource(R.drawable.button_onclick);
+                        if (outtime != null) {
+                            outtime.onOutTime();
+                        }
+                        break;
+                }
+            }
+        };
+
+        finishhandler.sendEmptyMessage(1);
     }
 
 
     //属性设置
-    public NDialogBuilder setTouchOutSideCancelable(boolean touchOutSideCancel) {
+    public EDialog2Builder setTouchOutSideCancelable(boolean touchOutSideCancel) {
         this.dialog.setCanceledOnTouchOutside(touchOutSideCancel);
         this.dialog.setCancelable(touchOutSideCancel);
         return this;
@@ -141,20 +200,21 @@ public class NDialogBuilder {
      * @param message 消息内容
      * @return this
      */
-    public NDialogBuilder setMessage(String message, int layout) {
+    public EDialog2Builder setMessage(String message, int layout) {
         dialogMsg = dialog.findViewById(R.id.mdialog_message);
-        if (message != null) {
-            dialogMsg.setText(message);
-            dialogMsg.setVisibility(View.VISIBLE);
-            if (layout == MSG_LAYOUT_LEFT) {
-                dialogMsg.setGravity(Gravity.START);
-            } else if (layout == MSG_LAYOUT_CENTER) {
-                dialogMsg.setGravity(Gravity.CENTER);
+        if (dialogMsg != null) {
+            if (message != null) {
+                dialogMsg.setText(message);
+                dialogMsg.setVisibility(View.VISIBLE);
+                if (layout == MSG_LAYOUT_LEFT) {
+                    dialogMsg.setGravity(Gravity.START);
+                } else if (layout == MSG_LAYOUT_CENTER) {
+                    dialogMsg.setGravity(Gravity.CENTER);
+                }
+            } else {
+                dialogMsg.setVisibility(View.GONE);
             }
-        } else {
-            dialogMsg.setVisibility(View.GONE);
         }
-
         return this;
     }
 
@@ -164,7 +224,7 @@ public class NDialogBuilder {
      * @param title 标题
      * @return this
      */
-    public NDialogBuilder setTitle(String title) {
+    public EDialog2Builder setTitle(String title) {
         dialogTitle = dialog.findViewById(R.id.mdialog_title);
         if (title != null) {
             dialogTitle.setText(title);
@@ -180,7 +240,7 @@ public class NDialogBuilder {
      *
      * @param resId
      */
-    public NDialogBuilder setDialogAnimation(int resId) {
+    public EDialog2Builder setDialogAnimation(int resId) {
         this.dialog.getWindow().setWindowAnimations(resId);
         return this;
     }
@@ -191,7 +251,7 @@ public class NDialogBuilder {
      * @param location
      * @return
      */
-    public NDialogBuilder setDialoglocation(int location) {
+    public EDialog2Builder setDialoglocation(int location) {
         Window window = this.dialog.getWindow();
         switch (location) {
             case DIALOG_LOCATION_CENTER:
@@ -228,27 +288,24 @@ public class NDialogBuilder {
          * @param whichBtn 点击的哪个按钮
          */
         void onDialogbtnClick(Context context, Dialog dialog, int whichBtn);
+    }
 
+    public interface onInputFinishListener {
+        void onInputFinish(String vcode);
+    }
+
+    public interface onOutTimeListener {
+        void onOutTime();
     }
 
     //默认一个按钮
-    public NDialogBuilder setBtnClickListener(final boolean isDissmiss, String btn1text, final onDialogbtnClickListener btnClickListener) {
-        return this.setClickListener(isDissmiss, R.id.mdialog_btn1, btn1text, 0, "", btnClickListener);
-    }
-
-    //自定义一个按钮
-    public NDialogBuilder setBtnClickListener(final boolean isDissmiss, int btn1, String btn1text, final onDialogbtnClickListener btnClickListener) {
-        return this.setClickListener(isDissmiss, btn1, btn1text, 0, "", btnClickListener);
+    public EDialog2Builder setBtnClickListener(final boolean isDissmiss, String btn1text, final onDialogbtnClickListener btnClickListener) {
+        return this.setClickListener(isDissmiss, btn1text, null, btnClickListener);
     }
 
     //默认两个个按钮
-    public NDialogBuilder setBtnClickListener(final boolean isDissmiss, String btn1text, String btn2text, final onDialogbtnClickListener btnClickListener) {
-        return this.setClickListener(isDissmiss, R.id.mdialog_btn1, btn1text, R.id.mdialog_btn2, btn2text, btnClickListener);
-    }
-
-    //自定义两个个按钮
-    public NDialogBuilder setBtnClickListener(final boolean isDissmiss, int btn1, String btn1text, int btn2, String btn2text, final onDialogbtnClickListener btnClickListener) {
-        return this.setClickListener(isDissmiss, btn1, btn1text, btn2, btn2text, btnClickListener);
+    public EDialog2Builder setBtnClickListener(final boolean isDissmiss, String btn1text, String btn2text, final onDialogbtnClickListener btnClickListener) {
+        return this.setClickListener(isDissmiss, btn1text, btn2text, btnClickListener);
     }
 
     /**
@@ -258,32 +315,31 @@ public class NDialogBuilder {
      * @param isDissmiss       点击按钮后是否取消对话框
      * @return
      */
-    private NDialogBuilder setClickListener(final boolean isDissmiss, int btn1, String btn1text, int btn2, String btn2text, final onDialogbtnClickListener btnClickListener) {
-        if (btn1 != 0) {
-            // 设置确认按钮
-            final Button btnConfirm = dialog.findViewById(btn1);
-            btnConfirm.setText(btn1text);
-            btnConfirm.setVisibility(View.VISIBLE);
-            // 给按钮绑定监听器
-            btnConfirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isDissmiss) {
-                        dialog.dismiss();
-                    }
-                    if (btnClickListener != null) {
-                        btnClickListener.onDialogbtnClick(context, dialog,
-                                onDialogbtnClickListener.BUTTON_CONFIRM);
-                    }
+    private EDialog2Builder setClickListener(final boolean isDissmiss, String btn1text, String btn2text, final onDialogbtnClickListener btnClickListener) {
+        // 设置确认按钮
+        final Button btnConfirm = dialog.findViewById(R.id.mdialog_btn1);
+        btnConfirm.setText(btn1text);
+        btnConfirm.setVisibility(View.VISIBLE);
+        // 给按钮绑定监听器
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isDissmiss) {
+                    dialog.dismiss();
                 }
-            });
-            if (btn2 == 0) {
-                btnConfirm.setBackgroundResource(R.drawable.button_onclick);
+                if (btnClickListener != null) {
+                    btnClickListener.onDialogbtnClick(context, dialog,
+                            onDialogbtnClickListener.BUTTON_CONFIRM);
+                }
+                if (isrun) {
+                    isrun = false;
+                    startcount();
+                }
             }
-        }
-        if (btn2 != 0) {
+        });
+        if (btn2text != null) {
             // 设置取消按钮
-            final Button btnCancel = dialog.findViewById(btn2);
+            final Button btnCancel = dialog.findViewById(R.id.mdialog_btn2);
             btnCancel.setVisibility(View.VISIBLE);
             btnCancel.setText(btn2text);
             btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -303,6 +359,22 @@ public class NDialogBuilder {
     }
 
     /**
+     * 设置输入完成监听
+     */
+    public EDialog2Builder setonInputFinishListener(final onInputFinishListener inputFinish) {
+        this.inputFinish = inputFinish;
+        return this;
+    }
+
+    /**
+     * 设置时间到了监听
+     */
+    public EDialog2Builder setOnTimeoutListener(final onOutTimeListener outtime) {
+        this.outtime = outtime;
+        return this;
+    }
+
+    /**
      * 创建对话框
      *
      * @return dialog
@@ -311,6 +383,32 @@ public class NDialogBuilder {
         if (context instanceof Activity) {
             dialog.setOwnerActivity((Activity) context);
         }
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                if (timer != null) {
+                    timer.cancel();
+                }
+            }
+        });
+        startcount();
         return dialog;
     }
+
+
+    private void startcount() {
+        btnConfirm.setBackgroundResource(R.drawable.dialog_button_gray);
+        timer = new CountDownTimer(60000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                btnConfirm.setText(String.valueOf(millisUntilFinished / 1000) + "s后重新获取");
+            }
+
+            public void onFinish() {
+                isrun = true;
+                finishhandler.sendEmptyMessage(OUTTIME);
+            }
+        }.start();
+    }
+
+
 }
