@@ -9,6 +9,7 @@ import x.com.dialogmobile.LoginDialog.LDialogBuilder
  */
 class LoginActivity : AppCompatActivity() {
     var a: LDialogBuilder? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
