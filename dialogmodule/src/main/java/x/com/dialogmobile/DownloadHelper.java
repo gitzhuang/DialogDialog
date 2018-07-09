@@ -1,4 +1,4 @@
-package x.com.dialogmobile.CheckUpdate;
+package x.com.dialogmobile;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -20,18 +21,15 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
-import x.com.dialogmobile.BuildConfig;
-import x.com.dialogmobile.NotificationHelper;
 import x.com.dialogmobile.ProgressDialog.PDialog2Builder;
-import x.com.dialogmobile.R;
 
 
-class DownloadHelper {
+public class DownloadHelper {
     private final String TAG = "download";
     private static final int DOWNLOAD_ING = 1;
     private static final int DOWNLOAD_OVER = 2;
-//    private static final int DOWNLOAD_AGAIN = 3;
     private String mVersionName;
     private String mDownloadUrl;
     private Activity mActivity;
@@ -46,60 +44,96 @@ class DownloadHelper {
     private NotificationHelper mNotificationHelper;
     private int mNotificationIconId;
     private String mNotificationTitle;
+    private boolean mIsShowNotification;//是否显示下载进度通知
+    private boolean mIsShowDialog;//是否显示下载进度弹框
+    private boolean mIsCheckUp;//是否是更新，true则自动安装
+    private String mBtnSureText;
+    private String mBtnCancelText;
 
 
     public interface DownloadCallBack {
-        void downloadCancel();//取消下载时回调
+        //void downloadCancel();//取消下载时回调
 
         void installCancel();//取消安装时回调
+
+        void downloadSuccess(File file);//下载成功
 
         void downloadFail();//下载失败时回调
     }
 
     @SuppressLint("HandlerLeak")
-    DownloadHelper(Activity activity, final String downloadUrl, int isForce, int notificationIconId, String notificationTitle, DownloadCallBack downloadCallBack) {
+    public DownloadHelper(Activity activity, String downloadUrl, final DownloadCallBack downloadCallBack) {
         mActivity = activity;
-        mIsForce = isForce;
+        mIsForce = 0; //默认不强制
+        mIsCheckUp = false;
         mDownloadUrl = downloadUrl;
         mDownloadCallBack = downloadCallBack;
-        mVersionName = BuildConfig.APPLICATION_ID + ".checkUp";
+        mVersionName = getFileName(downloadUrl);
         mSavePath = Environment.getExternalStorageDirectory() + "/" + "deanDownload";
-        mNotificationIconId = notificationIconId;
-        mNotificationTitle = notificationTitle;
+
         mProgressHandler = new MyHandle(mActivity) {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case DOWNLOAD_ING:
-                        mPDialog2Builder.setProgress(mProgress);
-                        mNotificationHelper.setProgress(mProgress, null);
+                        if (mIsShowDialog) {
+                            mPDialog2Builder.setProgress(mProgress);
+                        }
+                        if (mIsShowNotification) {
+                            mNotificationHelper.setProgress(mProgress, null);
+                        }
                         break;
                     case DOWNLOAD_OVER:
-                        if (mNotificationHelper != null) {
-                            mNotificationHelper.setProgress(100, getInstallApkIntent(new File(mSavePath, mVersionName)));
+                        //刷新进度
+                        downloadSuccess();
+                        //回调file
+                        downloadCallBack.downloadSuccess(new File(mSavePath, mVersionName));
+                        if (mIsCheckUp) {
+                            //判断是否执行安装
+                            installAPK();
                         }
-                        installAPK();
                         break;
-//                    case DOWNLOAD_AGAIN:
-//                        showReDownload();
-//                        break;
                 }
             }
         };
-        startDownload();
+    }
+
+    /**
+     * 根据url返回文件名
+     *
+     * @param downloadUrl 下载路径
+     * @return this
+     */
+    private String getFileName(String downloadUrl) {
+        String[] symbol = new String[]{"/", "//?", "=", "&"};
+        String[] split;
+        if (downloadUrl != null) {
+            for (int i = 0; i < symbol.length && downloadUrl.length() > 0; i++) {
+                split = downloadUrl.split(symbol[i]);
+                downloadUrl = split[split.length - 1];
+            }
+            return downloadUrl;
+        } else {
+            return "";
+        }
     }
 
     /**
      * 开启下载
      */
-    void startDownload() {
-        if (mNotificationHelper == null) {
-            mNotificationHelper = new NotificationHelper(mActivity, mNotificationTitle);
+    private void startDownload() {
+        if (mIsShowNotification && mNotificationHelper == null) {
+            mNotificationHelper = new NotificationHelper(mActivity, TextUtils.isEmpty(mNotificationTitle) ? "" : mNotificationTitle);
+            if (mNotificationIconId != 0) {
+                mNotificationHelper.setSmallIcon(mNotificationIconId);
+            }
             mNotificationHelper.setType(NotificationHelper.NOTIFICATION_TYPE_DOWNLOAD);
             mNotificationHelper.setProgress(0, null);
         }
         //显示下载对话框
-        showDialog();
+        if (mIsShowDialog) {
+            showDialog();
+        }
         //获取网络资源，判断下载或直接安装
         getApkResource();
     }
@@ -117,11 +151,10 @@ class DownloadHelper {
                         public void onClick(View view) {
                             mIsCancle = true;
                             mDialog.dismiss();
-                            mDownloadCallBack.downloadCancel();
+                            //mDownloadCallBack.downloadCancel();
                         }
                     })
-                    .setBtnVisity(false, true);
-//                    .setBtnCancelVisity(false);
+                    .setBtnVisity(false, false);
             mDialog = mPDialog2Builder.create();
         }
         mDialog.show();
@@ -153,8 +186,6 @@ class DownloadHelper {
                         downloadApk(is, len, apkFile);
                     } catch (Exception e) {
                         downloadFail(apkFile);
-                        Log.e(TAG, "getApk: " + e.toString());
-                        //mProgressHandler.sendEmptyMessage(DOWNLOAD_AGAIN);
                     }
                 } else {
                     Log.e(TAG, "getApk: SD卡读写权限受限");
@@ -172,7 +203,6 @@ class DownloadHelper {
      */
     private void downloadApk(InputStream is, int len, File apkFile) {
         //显示通知栏下载进度
-
         mProgress = 0;
         int mMiddlerogress = 0;
         try {
@@ -198,52 +228,43 @@ class DownloadHelper {
             }
         } catch (Exception e) {
             downloadFail(apkFile);
-            Log.e(TAG, "download: " + e.toString());
         }
     }
 
     /**
+     * 下载失败
+     *
      * @param apkFile 安装包
      */
     private void downloadFail(File apkFile) {
         if (apkFile.exists()) {
             apkFile.delete();
         }
-        if (mDialog != null) mDialog.dismiss();
-        if (mDownloadCallBack != null) mDownloadCallBack.downloadFail();
+        if (mDialog != null) {
+            mDialog.dismiss();
+        }
+        if (mDownloadCallBack != null) {
+            mDownloadCallBack.downloadFail();
+        }
     }
 
-//    /**
-//     * 重新下载
-//     */
-//    private void showReDownload() {
-//        if (mPDialog2Builder != null) {
-//            mPDialog2Builder.setBtnSure("重新下载", new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    view.setVisibility(View.GONE);
-//                    getApkResource();
-//                }
-//            });
-////            mPDialog2Builder.setBtnSureVisity(true);
-//            mPDialog2Builder.setBtnVisity(true, true);
-//        }
-//    }
-
     /*
-     * 执行安装apk
+     * 下载完成
      */
-    private void installAPK() {
+    private void downloadSuccess() {
+        if (mNotificationHelper != null) {
+            mNotificationHelper.setProgress(100, getInstallApkIntent(new File(mSavePath, mVersionName)));
+        }
         if (mPDialog2Builder != null) {
             mPDialog2Builder.setProgress(100);
-            mPDialog2Builder.setBtnCancel("下次再说", new View.OnClickListener() {
+            mPDialog2Builder.setBtnCancel(mBtnCancelText, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (mDialog != null) mDialog.dismiss();
                     if (mDownloadCallBack != null) mDownloadCallBack.installCancel();
                 }
             });
-            mPDialog2Builder.setBtnSure("立即安装", new View.OnClickListener() {
+            mPDialog2Builder.setBtnSure(mBtnSureText, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     installAPK();
@@ -251,7 +272,12 @@ class DownloadHelper {
             });
             mPDialog2Builder.setBtnVisity(mIsForce == 0, true);
         }
+    }
 
+    /**
+     * 安装apk
+     */
+    private void installAPK() {
         try {
             File apkFile = new File(mSavePath, mVersionName);
             if (!apkFile.exists()) {
@@ -301,4 +327,71 @@ class DownloadHelper {
             super.handleMessage(msg);
         }
     }
+
+    /**
+     * 设置是否强制更新
+     *
+     * @param isForce 是否强制
+     * @return this
+     */
+    public DownloadHelper setIsForce(boolean isForce) {
+        mIsForce = isForce ? 1 : 0;
+        return this;
+    }
+
+    /**
+     * 设置通知参数
+     *
+     * @return this
+     */
+    public DownloadHelper setNotificationShow(boolean isShow, @NonNull String title, int iconId) {
+        mIsShowNotification = isShow;
+        mNotificationTitle = title;
+        mNotificationIconId = iconId;
+        return this;
+    }
+
+    /**
+     * 设置是否显示下载进度弹框
+     *
+     * @param isShow 是否显示
+     * @return this
+     */
+    public DownloadHelper setDialogShow(boolean isShow, @NonNull String btnCancelText, @NonNull String btnSureText) {
+        mIsShowDialog = isShow;
+        mBtnSureText = btnSureText;
+        mBtnCancelText = btnCancelText;
+        return this;
+    }
+
+    /**
+     * 是否是版本更新，true自动执行安装
+     *
+     * @param isCheckUp 是否为版本升级
+     * @return this
+     */
+    public DownloadHelper setCheckUp(boolean isCheckUp) {
+        mIsCheckUp = isCheckUp;
+        return this;
+    }
+
+    /**
+     * 设置保存路径，默认 Environment.getExternalStorageDirectory() + "/" + "deanDownload";
+     *
+     * @param path 路径
+     * @return this
+     */
+    public DownloadHelper setSavePath(String path) {
+        mSavePath = path;
+        return this;
+    }
+
+    /**
+     * 开启下载
+     */
+    public void start() {
+        startDownload();
+    }
+
+
 }

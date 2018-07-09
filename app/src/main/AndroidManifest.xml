@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".LoginActivity">
+        <activity android:name=".CheckNotificationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,8 +24,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".LoginActivity" />
         <activity android:name=".NormalDialogActivity" />
-        <activity android:name=".CheckNotificationActivity" />
     </application>
 
 </manifest>
