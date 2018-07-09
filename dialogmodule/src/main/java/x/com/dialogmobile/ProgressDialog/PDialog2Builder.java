@@ -130,22 +130,6 @@ public class PDialog2Builder {
         return this;
     }
 
-//    /**
-//     * 设置取消按钮是否可见
-//     *
-//     * @param isVisity 是否可见
-//     * @return this
-//     */
-//    public PDialog2Builder setBtnCancelVisity(boolean isVisity) {
-//        if (tvCancel == null) {
-//            tvCancel = dialog.findViewById(R.id.tv_sure);
-//        }
-//        if (dialog != null) {
-//            tvCancel.setVisibility(isVisity ? View.VISIBLE : View.GONE);
-//        }
-//        return this;
-//    }
-
     /**
      * 确定按钮
      *
@@ -168,22 +152,6 @@ public class PDialog2Builder {
         tvSure.setOnClickListener(listener);
         return this;
     }
-
-//    /**
-//     * 设置确定按钮是否可见
-//     *
-//     * @param isVisity 是否可见
-//     * @return this
-//     */
-//    public PDialog2Builder setBtnSureVisity(boolean isVisity) {
-//        if (tvSure == null) {
-//            tvSure = dialog.findViewById(R.id.tv_sure);
-//        }
-//        if (dialog != null) {
-//            tvSure.setVisibility(isVisity ? View.VISIBLE : View.GONE);
-//        }
-//        return this;
-//    }
 
     /**
      * 设置取消、确定按钮是否显示

@@ -10,11 +10,15 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import java.io.File;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import x.com.dialogmobile.DownloadHelper;
 import x.com.dialogmobile.NDialogBuilder;
 import x.com.dialogmobile.PermissionHelper;
+import x.com.dialogmobile.R;
 
 public class CheckDialogFragment extends DialogFragment {
     private AppCompatActivity activity;
@@ -22,8 +26,6 @@ public class CheckDialogFragment extends DialogFragment {
     private String downloadUrl;
     private int isforce;
     private String msg;
-    private int notificationIconId;
-    private String notificationTitle;
     private OnCheckcallback callback;
     private DownloadHelper downloadHelper;
     private String downloadFailMessgae;
@@ -39,21 +41,18 @@ public class CheckDialogFragment extends DialogFragment {
     };
 
 
-
     public interface OnCheckcallback {
         void onCancel();
     }
 
     public CheckDialogFragment(AppCompatActivity activity, String msg, int layoutStyle, String downloadUrl,
-                               int isforce, int notificationIconId, String notificationTitle, String downloadFailMessgae,
+                               int isforce, String downloadFailMessgae,
                                CheckDialogFragment.OnCheckcallback callback) {
         this.activity = activity;
         this.layoutStyle = layoutStyle;
         this.downloadUrl = downloadUrl;
         this.isforce = isforce;
         this.msg = msg;
-        this.notificationIconId = notificationIconId;
-        this.notificationTitle = notificationTitle;
         this.downloadFailMessgae = downloadFailMessgae;
         this.callback = callback;
     }
@@ -86,31 +85,22 @@ public class CheckDialogFragment extends DialogFragment {
                                                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? mPermissionList_O : mPermissionList,
                                                 new PermissionHelper.RequestPermissionCallBack() {
                                                     @Override
-                                                    public void requestPermissionAgainHint() {
-                                                        Toast.makeText(activity, "此功能需要允许存储权限，才能正常使用。", Toast.LENGTH_LONG).show();
-                                                    }
-
-                                                    @Override
                                                     public void requestPermissionSuccess() {
                                                         dismiss();
-                                                        downloadHelper = new DownloadHelper(
-                                                                activity,
-                                                                downloadUrl,
-                                                                isforce,
-                                                                notificationIconId,
-                                                                notificationTitle,
+                                                        downloadHelper = new DownloadHelper(activity, downloadUrl,
                                                                 new DownloadHelper.DownloadCallBack() {
-                                                                    @Override
-                                                                    public void downloadCancel() {
-                                                                        //取消下载
-                                                                        Toast.makeText(activity, "取消了", Toast.LENGTH_SHORT).show();
-                                                                    }
 
                                                                     @Override
                                                                     public void installCancel() {
                                                                         //取消安装
                                                                         Toast.makeText(activity, "取消安装了", Toast.LENGTH_SHORT).show();
                                                                     }
+
+                                                                    @Override
+                                                                    public void downloadSuccess(File file) {
+
+                                                                    }
+
 
                                                                     @Override
                                                                     public void downloadFail() {
@@ -125,14 +115,19 @@ public class CheckDialogFragment extends DialogFragment {
                                                                                         .setBtnClickListener(true, "重新下载", new NDialogBuilder.onDialogbtnClickListener() {
                                                                                             @Override
                                                                                             public void onDialogbtnClick(Context context, Dialog dialog, int whichBtn) {
-                                                                                                downloadHelper.startDownload();
+                                                                                                downloadHelper.start();
                                                                                             }
                                                                                         })
                                                                                         .create().show();
                                                                             }
                                                                         });
                                                                     }
-                                                                });
+                                                                })
+                                                        .setCheckUp(true)
+                                                        .setIsForce(isforce == 1)
+                                                        .setNotificationShow(true, "下载通知", R.mipmap.ic_launcher)
+                                                        .setDialogShow(true, "下次再说", "立即安装");
+                                                        downloadHelper.start();
                                                     }
 
                                                     @Override
