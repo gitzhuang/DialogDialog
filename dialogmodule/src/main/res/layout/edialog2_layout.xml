@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="25dp"
+    android:background="@drawable/dialog_background"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+
+    <TextView
+        android:id="@+id/mdialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="23dp"
+        android:gravity="center"
+        android:textColor="@color/theme_blue"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <!-- 对话框消息内容 -->
+
+    <TextView
+        android:id="@+id/mdialog_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:text="asdasdsadasd"
+        android:textColor="@color/font_color_3"
+        android:textSize="16sp" />
+
+    <x.com.dialogmobile.LoginDialog.SecurityCodeView
+        android:id="@+id/edit_security_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="15dp"
+        android:gravity="center_horizontal" />
+
+    <!-- 对话框确定/取消按钮 -->
+
+    <LinearLayout
+        android:id="@+id/dialog_btnlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="22dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/mdialog_btn1"
+            style="@style/kuang_button1"
+            android:background="@drawable/dialog_button_gray"
+            android:text="否"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/mdialog_btn2"
+            style="@style/kuang_button1"
+            android:text="是"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>

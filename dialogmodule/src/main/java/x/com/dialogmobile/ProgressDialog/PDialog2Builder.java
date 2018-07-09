@@ -14,9 +14,8 @@ import x.com.dialogmobile.R;
 
 public class PDialog2Builder {
     private Dialog dialog;
-    private Dialog errordialog;
     private Context context;
-    private TextView dialogTitle, dialogMsg, tvCancel, tvSure, tvProgress;
+    private TextView dialogMsg, tvCancel, tvSure, tvProgress;
     private ProgressBar progressBar;
     // 弹出dialog时候是否要显示阴影
     private static boolean dimEnable = true;
@@ -43,7 +42,7 @@ public class PDialog2Builder {
     /**
      * 构造器
      *
-     * @param context
+     * @param context          context
      * @param layoutStyle      布局样式
      * @param isSystemAlert    是否是系统弹框（service等地方用到系统级别不依赖activity）
      * @param widthcoefficient 对话框宽度所占屏幕宽度的比重（0-1）
@@ -57,7 +56,7 @@ public class PDialog2Builder {
         }
         // 设置对话框风格
         if (layoutStyle == 0) {
-            layoutStyle = R.layout.pdialog_layout;
+            layoutStyle = R.layout.download_progress_layout;
         }
         dialog.setContentView(layoutStyle);
         Window window = dialog.getWindow();
@@ -111,9 +110,9 @@ public class PDialog2Builder {
     /**
      * 取消按钮
      *
-     * @param cancelTitle
-     * @param listener
-     * @return
+     * @param cancelTitle 取消按钮名
+     * @param listener    按钮监听
+     * @return this
      */
     public PDialog2Builder setBtnCancel(String cancelTitle, View.OnClickListener listener) {
         if (tvCancel == null) {
@@ -131,28 +130,28 @@ public class PDialog2Builder {
         return this;
     }
 
-    /**
-     * 设置取消按钮是否可见
-     *
-     * @param isVisity
-     * @return
-     */
-    public PDialog2Builder setBtnCancelVisity(boolean isVisity) {
-        if (tvCancel == null) {
-            tvCancel = dialog.findViewById(R.id.tv_sure);
-        }
-        if (dialog != null) {
-            tvCancel.setVisibility(isVisity ? View.VISIBLE : View.GONE);
-        }
-        return this;
-    }
+//    /**
+//     * 设置取消按钮是否可见
+//     *
+//     * @param isVisity 是否可见
+//     * @return this
+//     */
+//    public PDialog2Builder setBtnCancelVisity(boolean isVisity) {
+//        if (tvCancel == null) {
+//            tvCancel = dialog.findViewById(R.id.tv_sure);
+//        }
+//        if (dialog != null) {
+//            tvCancel.setVisibility(isVisity ? View.VISIBLE : View.GONE);
+//        }
+//        return this;
+//    }
 
     /**
      * 确定按钮
      *
-     * @param cancleTitle
-     * @param listener
-     * @return
+     * @param cancleTitle 确定按钮名
+     * @param listener    按钮监听
+     * @return this
      */
     public PDialog2Builder setBtnSure(String cancleTitle, View.OnClickListener listener) {
         if (tvSure == null) {
@@ -170,28 +169,28 @@ public class PDialog2Builder {
         return this;
     }
 
-    /**
-     * 设置确定按钮是否可见
-     *
-     * @param isVisity
-     * @return
-     */
-    public PDialog2Builder setBtnSureVisity(boolean isVisity) {
-        if (tvSure == null) {
-            tvSure = dialog.findViewById(R.id.tv_sure);
-        }
-        if (dialog != null) {
-            tvSure.setVisibility(isVisity ? View.VISIBLE : View.GONE);
-        }
-        return this;
-    }
+//    /**
+//     * 设置确定按钮是否可见
+//     *
+//     * @param isVisity 是否可见
+//     * @return this
+//     */
+//    public PDialog2Builder setBtnSureVisity(boolean isVisity) {
+//        if (tvSure == null) {
+//            tvSure = dialog.findViewById(R.id.tv_sure);
+//        }
+//        if (dialog != null) {
+//            tvSure.setVisibility(isVisity ? View.VISIBLE : View.GONE);
+//        }
+//        return this;
+//    }
 
     /**
      * 设置取消、确定按钮是否显示
      *
-     * @param btnCancle
-     * @param btnSure
-     * @return
+     * @param btnCancle 取消按钮
+     * @param btnSure 确认按钮
+     * @return this
      */
     public PDialog2Builder setBtnVisity(boolean btnCancle, boolean btnSure) {
         if (tvCancel != null) {
@@ -200,15 +199,14 @@ public class PDialog2Builder {
         if (tvSure != null) {
             tvSure.setVisibility(btnSure ? View.VISIBLE : View.GONE);
         }
-
         return this;
     }
 
     /**
      * 设置取消、确定按钮是否显示
      *
-     * @param progress
-     * @return
+     * @param progress 进度
+     * @return this
      */
     public PDialog2Builder setProgress(int progress) {
         if (progressBar == null) {
@@ -218,7 +216,7 @@ public class PDialog2Builder {
             tvProgress = dialog.findViewById(R.id.tv_progress);
         }
         progressBar.setProgress(progress);
-        tvProgress.setText(String.valueOf(progress));
+        tvProgress.setText(String.valueOf(progress) + "%");
         return this;
     }
 
@@ -234,34 +232,13 @@ public class PDialog2Builder {
     /**
      * 创建对话框
      *
-     * @return
+     * @return dialog
      */
 
     public Dialog create() {
         if (context instanceof Activity) {
             dialog.setOwnerActivity((Activity) context);
         }
-//        new CountDownTimer(10000, 1000) {
-//            public void onTick(long millisUntilFinished) {
-//            }
-//
-//            public void onFinish() {
-//                //显示错误对话框
-//                dialog.dismiss();
-//                errordialog = new NDialogBuilder(context, 0, 1.0f)
-//                        .setTouchOutSideCancelable(false)
-//                        .setMessage("345tret", NDialogBuilder.MSG_LAYOUT_LEFT)
-//                        .setDialogAnimation(NDialogBuilder.DIALOG_ANIM_NORMAL)
-//                        .setBtnClickListener(true, "hao", new NDialogBuilder.onDialogbtnClickListener() {
-//                            @Override
-//                            public void onDialogbtnClick(Context context, Dialog dialog, int whichBtn) {
-//                                errordialog.dismiss();
-//                            }
-//                        })
-//                        .create();
-//                errordialog.show();
-//            }
-//        }.start();
         return dialog;
     }
 }

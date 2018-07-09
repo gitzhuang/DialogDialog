@@ -94,7 +94,7 @@ public class NDialogBuilder {
         }
         // 设置对话框风格
         if (layoutStyle == 0) {
-            layoutStyle = R.layout.mdialog_layout;
+            layoutStyle = R.layout.ndialog_layout;
         }
         dialog.setContentView(layoutStyle);
         Window window = dialog.getWindow();
@@ -143,19 +143,18 @@ public class NDialogBuilder {
      */
     public NDialogBuilder setMessage(String message, int layout) {
         dialogMsg = dialog.findViewById(R.id.mdialog_message);
-        if (dialogMsg != null) {
-            if (message != null) {
-                dialogMsg.setText(message);
-                dialogMsg.setVisibility(View.VISIBLE);
-                if (layout == MSG_LAYOUT_LEFT) {
-                    dialogMsg.setGravity(Gravity.START);
-                } else if (layout == MSG_LAYOUT_CENTER) {
-                    dialogMsg.setGravity(Gravity.CENTER);
-                }
-            } else {
-                dialogMsg.setVisibility(View.GONE);
+        if (message != null) {
+            dialogMsg.setText(message);
+            dialogMsg.setVisibility(View.VISIBLE);
+            if (layout == MSG_LAYOUT_LEFT) {
+                dialogMsg.setGravity(Gravity.START);
+            } else if (layout == MSG_LAYOUT_CENTER) {
+                dialogMsg.setGravity(Gravity.CENTER);
             }
+        } else {
+            dialogMsg.setVisibility(View.GONE);
         }
+
         return this;
     }
 
@@ -167,13 +166,11 @@ public class NDialogBuilder {
      */
     public NDialogBuilder setTitle(String title) {
         dialogTitle = dialog.findViewById(R.id.mdialog_title);
-        if (dialogTitle != null) {
-            if (title != null) {
-                dialogTitle.setText(title);
-                dialogTitle.setVisibility(View.VISIBLE);
-            } else {
-                dialogTitle.setVisibility(View.GONE);
-            }
+        if (title != null) {
+            dialogTitle.setText(title);
+            dialogTitle.setVisibility(View.VISIBLE);
+        } else {
+            dialogTitle.setVisibility(View.GONE);
         }
         return this;
     }

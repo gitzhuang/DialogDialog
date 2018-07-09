@@ -16,6 +16,9 @@ public class CheckNotificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        /**
+         * 检查更新
+         */
         new CheckDialogFragment(this,
                 "版本更新内容",
                 0,
@@ -32,6 +35,9 @@ public class CheckNotificationActivity extends AppCompatActivity {
                     }
                 }).show(getSupportFragmentManager(), "checkup");
 
+        /**
+         * 通知使用
+         */
         //优先级default（3）默认通知，不可折叠
         new NotificationHelper(this, "默认通知")
                 .setContent("测试1")//通知内容
@@ -79,7 +85,8 @@ public class CheckNotificationActivity extends AppCompatActivity {
 //        notificationHelper.cancel();
         //取消全部通知
 //        NotificationHelper.cancelAll(this);
-
     }
-
+    /**
+     * 权限申请
+     */
 }

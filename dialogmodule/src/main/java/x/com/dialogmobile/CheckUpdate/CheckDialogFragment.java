@@ -17,6 +17,17 @@ import x.com.dialogmobile.NDialogBuilder;
 import x.com.dialogmobile.PermissionHelper;
 
 public class CheckDialogFragment extends DialogFragment {
+    private AppCompatActivity activity;
+    private int layoutStyle;
+    private String downloadUrl;
+    private int isforce;
+    private String msg;
+    private int notificationIconId;
+    private String notificationTitle;
+    private OnCheckcallback callback;
+    private DownloadHelper downloadHelper;
+    private String downloadFailMessgae;
+
     private final String[] mPermissionList = new String[]{
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -28,16 +39,6 @@ public class CheckDialogFragment extends DialogFragment {
     };
 
 
-    private AppCompatActivity activity;
-    private int layoutStyle;
-    private String downloadUrl;
-    private int isforce;
-    private String msg;
-    private int notificationIconId;
-    private String notificationTitle;
-    private OnCheckcallback callback;
-    private DownloadHelper downloadHelper;
-    private String downloadFailMessgae;
 
     public interface OnCheckcallback {
         void onCancel();
