@@ -1,11 +1,13 @@
 package x.com.dialogmobile;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -71,6 +73,7 @@ public class EDialogBuilder {
     private Context context;
     private TextView dialogTitle, dialogMsg;
     private EditText et_input;
+    private float alpha;
 
 
     /**
@@ -142,6 +145,7 @@ public class EDialogBuilder {
         });
         this.dialog = dialog;
         this.context = context;
+        this.alpha = 0.8f;
     }
 
 
@@ -289,6 +293,7 @@ public class EDialogBuilder {
      * @param isDissmiss       点击按钮后是否取消对话框
      * @return
      */
+    @SuppressLint("ClickableViewAccessibility")
     private EDialogBuilder setClickListener(final boolean isDissmiss, int btn1, String btn1text, int btn2, String btn2text, final onDialogbtnClickListener btnClickListener) {
         if (btn1 != 0) {
             // 设置确认按钮
@@ -306,6 +311,20 @@ public class EDialogBuilder {
                         btnClickListener.onDialogbtnClick(context, dialog,
                                 onDialogbtnClickListener.BUTTON_CONFIRM, et_input.getText().toString());
                     }
+                }
+            });
+            btnConfirm.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            btnConfirm.setAlpha(alpha);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            btnConfirm.setAlpha(1f);
+                            break;
+                    }
+                    return false;
                 }
             });
             if (btn2 == 0) {
@@ -327,6 +346,20 @@ public class EDialogBuilder {
                         btnClickListener.onDialogbtnClick(context, dialog,
                                 onDialogbtnClickListener.BUTTON_CANCEL, "");
                     }
+                }
+            });
+            btnCancel.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            btnCancel.setAlpha(alpha);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            btnCancel.setAlpha(1f);
+                            break;
+                    }
+                    return false;
                 }
             });
         }

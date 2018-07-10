@@ -1,6 +1,5 @@
 package x.com.dialogmobile;
 
-import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -311,23 +310,23 @@ public class NotificationHelper {
      *
      * @param progress 进度
      */
-    @SuppressLint("DefaultLocale")
     public void setProgress(int progress, Intent intent) {
-        if (NOTIFICATION_CHANNEL_ID_DOWNLOAD.equals(mPushChannelId)) {
-            Log.d("TAG", "setProgress: " + progress);
-            if (progress == 100) {
-                mBuilder.setContentText("下载完成").setProgress(100, progress, false);
-                //设置点击启动安装
-                if (intent != null) {
-                    PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, Intent.createChooser(intent, "标题"),
-                            PendingIntent.FLAG_UPDATE_CURRENT);
-                    mBuilder.setContentIntent(pendingIntent);
-                }
-            } else {
-                mBuilder.setContentText(String.format("正在下载:%1$d%%", progress)).setProgress(100, progress, false);
+        Log.d("TAG", "setProgress: " + progress);
+        if (progress == 100) {
+            mBuilder.setContentText("下载完成").setProgress(100, 100, false);
+            //设置点击启动安装
+            if (intent != null) {
+                PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, Intent.createChooser(intent, "标题"),
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+                mBuilder.setContentIntent(pendingIntent);
             }
-            mNotifyManager.notify(mNotificationId, mBuilder.build());
+            mBuilder.setOngoing(false);
+            mBuilder.setAutoCancel(true);
+            mNotifyManager.cancel(mNotificationId);//不管当前显示进度多少，直接清空，并设置下载完成
+        } else {
+            mBuilder.setContentText("正在下载:" + progress + "%").setProgress(100, progress, false);
         }
+        mNotifyManager.notify(mNotificationId, mBuilder.build());
     }
 
 }
