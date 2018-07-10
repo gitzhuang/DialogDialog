@@ -2,6 +2,7 @@ package x.com.dialogdialog;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
@@ -9,29 +10,34 @@ import java.io.File;
 import androidx.appcompat.app.AppCompatActivity;
 import x.com.dialogmobile.CheckUpdate.CheckDialogFragment;
 import x.com.dialogmobile.DownloadHelper;
+import x.com.dialogmobile.NDialogBuilder;
 
 
 public class CheckNotificationActivity extends AppCompatActivity {
+
+    private DownloadHelper downloadHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //检查更新
-        new CheckDialogFragment(this,
-                "版本更新内容",
-                0,
-//                "http://imtt.dd.qq.com/16891/50CC095EFBE6059601C6FB652547D737.apk?fsname=com.tencent.mm_6.6.7_1321.apk&csr=1bbd",
-//                "http://imtt.dd.qq.com/16891/337A49BBE7A8A0B42E2312893903BBB3.apk?fsname=com.coolsnow.screenshot_5.6.0_56000.apk&csr=1bbd",
-                "http://imtt.dd.qq.com/16891/337A49BBE7A8A0B42E2312893903BBB3.apk?fsname=com.coolsnow.screenshot_5.6.0_56000.apk",
-//                "http://imtt.dd.qq.com/16891/1F9DFAAC8C158F24D5A320A044AD352A.apk?fsname=com.qiyi.video_9.6.5_81100.apk",
-                0,
-                "下载失败提示信息",
-                new CheckDialogFragment.OnCheckcallback() {
-                    @Override
-                    public void onCancel() {
-                        Toast.makeText(CheckNotificationActivity.this, "345", Toast.LENGTH_SHORT).show();
-                    }
-                }).show(getSupportFragmentManager(), "checkup");
+//        new CheckDialogFragment(this,
+//                "版本更新内容",
+//                0,
+////                "http://imtt.dd.qq.com/16891/50CC095EFBE6059601C6FB652547D737.apk?fsname=com.tencent.mm_6.6.7_1321.apk&csr=1bbd",
+////                "http://imtt.dd.qq.com/16891/337A49BBE7A8A0B42E2312893903BBB3.apk?fsname=com.coolsnow.screenshot_5.6.0_56000.apk&csr=1bbd",
+//                "http://imtt.dd.qq.com/16891/337A49BBE7A8A0B42E2312893903BBB3.apk?fsname=com.coolsnow.screenshot_5.6.0_56000.apk",
+////                "http://imtt.dd.qq.com/16891/1F9DFAAC8C158F24D5A320A044AD352A.apk?fsname=com.qiyi.video_9.6.5_81100.apk",
+//                0,
+//                "下载失败提示信息",
+//                new CheckDialogFragment.OnCheckcallback() {
+//                    @Override
+//                    public void onCancel() {
+//                        Toast.makeText(CheckNotificationActivity.this, "345", Toast.LENGTH_SHORT).show();
+//                    }
+//                }).show(getSupportFragmentManager(), "checkup");
+
 
 //        //通知使用
 //        //优先级default（3）默认通知，不可折叠
@@ -98,9 +104,46 @@ public class CheckNotificationActivity extends AppCompatActivity {
 //            }
 //        });
 
-        //下载工具
-        new DownloadHelper(this,
-                "http://imtt.dd.qq.com/16891/337A49BBE7A8A0B42E2312893903BBB3.apk?fsname=com.coolsnow.screenshot_5.6.0_56000.apk",
+//        //下载工具
+//        new DownloadHelper(this,
+//                "http://imtt.dd.qq.com/16891/337A49BBE7A8A0B42E2312893903BBB3.apk?fsname=com.coolsnow.screenshot_5.6.0_56000.apk",
+//                new DownloadHelper.DownloadCallBack() {
+//                    @Override
+//                    public void installCancel() {
+//                        //取消安装
+//                    }
+//
+//                    @Override
+//                    public void downloadSuccess(File file) {
+//                        //下载成功
+//                    }
+//
+//                    @Override
+//                    public void downloadFail() {
+//                        //下载失败
+//                    }
+//                })
+//                .setIsForce(false)//设置是否强制升级
+//                .setNotificationShow(true, "下载通知标题", R.mipmap.ic_launcher)//配置通知参数
+//                .setDialogShow(true, "取消安装", "立即安装")//配置弹框
+//                .setSavePath(Environment.getExternalStorageDirectory() + "/" + "checkUp")//配置下载路径
+//                .setCheckUp(true)//配置是否为版本升级，true则自动执行安装apk
+//                .start();//开启下载
+
+        new NDialogBuilder(this, 0, 1.0f)
+                .setTouchOutSideCancelable(false)
+                .setMessage("", NDialogBuilder.MSG_LAYOUT_LEFT)
+                .setDialogAnimation(NDialogBuilder.DIALOG_ANIM_NORMAL)
+                .setTitle("发现新版本")
+                .setBtnClickListener(true, "取消", "确定", null)
+                .create()
+                .show();
+
+    }
+
+    public void download(View view){
+        downloadHelper = new DownloadHelper(this,
+                "http://imtt.dd.qq.com/16891/1F9DFAAC8C158F24D5A320A044AD352A.apk?fsname=com.qiyi.video_9.6.5_81100.apk",
                 new DownloadHelper.DownloadCallBack() {
                     @Override
                     public void installCancel() {
@@ -110,6 +153,7 @@ public class CheckNotificationActivity extends AppCompatActivity {
                     @Override
                     public void downloadSuccess(File file) {
                         //下载成功
+                        //downloadHelper.stop();
                     }
 
                     @Override
@@ -119,11 +163,11 @@ public class CheckNotificationActivity extends AppCompatActivity {
                 })
                 .setIsForce(false)//设置是否强制升级
                 .setNotificationShow(true, "下载通知标题", R.mipmap.ic_launcher)//配置通知参数
-                .setDialogShow(true, "取消安装", "立即安装")//配置弹框
+                .setDialogShow(false, "取消安装", "立即安装")//配置弹框
                 .setSavePath(Environment.getExternalStorageDirectory() + "/" + "checkUp")//配置下载路径
-                .setCheckUp(true)//配置是否为版本升级，true则自动执行安装apk
+                .setCheckUp(false);
+        downloadHelper//配置是否为版本升级，true则自动执行安装apk
                 .start();//开启下载
-
     }
 
 }

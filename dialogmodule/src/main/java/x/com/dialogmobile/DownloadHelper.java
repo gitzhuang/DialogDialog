@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
@@ -49,7 +50,7 @@ public class DownloadHelper {
     private boolean mIsCheckUp;//是否是更新，true则自动安装
     private String mBtnSureText;
     private String mBtnCancelText;
-
+    private Thread thread;
 
     public interface DownloadCallBack {
         //void downloadCancel();//取消下载时回调
@@ -76,14 +77,16 @@ public class DownloadHelper {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case DOWNLOAD_ING:
-                        if (mIsShowDialog) {
+                        Log.d(TAG, "handleMessage: " + mProgress);
+                        if (mIsShowDialog && mProgress < 100) {
                             mPDialog2Builder.setProgress(mProgress);
                         }
-                        if (mIsShowNotification) {
+                        if (mIsShowNotification && mProgress < 100) {
                             mNotificationHelper.setProgress(mProgress, null);
                         }
                         break;
                     case DOWNLOAD_OVER:
+                        Log.d(TAG, "handleMessage: OVER");
                         //刷新进度
                         downloadSuccess();
                         //回调file
@@ -165,12 +168,16 @@ public class DownloadHelper {
      * 获取网络apk资源文件，判断下载或直接安装
      */
     private void getApkResource() {
-        new Thread(new Runnable() {
+        //显示通知栏下载进度
+        mProgress = 0;
+        thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                    int mMiddlerogress = 0;
                     File file = new File(mSavePath);
                     File apkFile = new File(mSavePath, mVersionName);
+                    FileOutputStream fos = null;
                     try {
                         if (!file.exists()) {
                             file.mkdir();
@@ -183,69 +190,52 @@ public class DownloadHelper {
                         if (apkFile.exists()) {
                             apkFile.delete();
                         }
-                        downloadApk(is, len, apkFile);
+                        fos = new FileOutputStream(apkFile);
+                        int count = 0;
+                        byte[] buffer = new byte[1024];
+                        while (!mIsCancle) {
+                            int numread = is.read(buffer);
+                            count += numread;
+                            // 计算进度条的当前位置
+                            mMiddlerogress = (int) (((float) count / len) * 100);
+                            if (mMiddlerogress > mProgress && mMiddlerogress < 100) {
+                                // 更新进度条
+                                mProgress = mMiddlerogress;
+                                mProgressHandler.sendEmptyMessage(DOWNLOAD_ING);
+                            }
+                            // 下载完成
+                            if (numread < 0) {
+                                mProgress = 100;
+                                mProgressHandler.sendEmptyMessage(DOWNLOAD_OVER);
+                                break;
+                            }
+                            fos.write(buffer, 0, numread);
+                        }
                     } catch (Exception e) {
-                        downloadFail(apkFile);
+                        if (apkFile.exists()) {
+                            apkFile.delete();
+                        }
+                        if (mDialog != null) {
+                            mDialog.dismiss();
+                        }
+                        if (mDownloadCallBack != null) {
+                            mDownloadCallBack.downloadFail();
+                        }
+                    } finally {
+                        if (fos != null) {
+                            try {
+                                fos.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 } else {
                     Log.e(TAG, "getApk: SD卡读写权限受限");
                 }
             }
-        }).start();
-    }
-
-    /**
-     * 下载apk
-     *
-     * @param is      资源流
-     * @param len     资源大小
-     * @param apkFile 安装包
-     */
-    private void downloadApk(InputStream is, int len, File apkFile) {
-        //显示通知栏下载进度
-        mProgress = 0;
-        int mMiddlerogress = 0;
-        try {
-            FileOutputStream fos = new FileOutputStream(apkFile);
-            int count = 0;
-            byte[] buffer = new byte[1024];
-            while (!mIsCancle) {
-                int numread = is.read(buffer);
-                count += numread;
-                // 计算进度条的当前位置
-                mMiddlerogress = (int) (((float) count / len) * 100);
-                if (mMiddlerogress > mProgress) {
-                    // 更新进度条
-                    mProgressHandler.sendEmptyMessage(DOWNLOAD_ING);
-                    mProgress = mMiddlerogress;
-                }
-                // 下载完成
-                if (numread < 0) {
-                    mProgressHandler.sendEmptyMessage(DOWNLOAD_OVER);
-                    break;
-                }
-                fos.write(buffer, 0, numread);
-            }
-        } catch (Exception e) {
-            downloadFail(apkFile);
-        }
-    }
-
-    /**
-     * 下载失败
-     *
-     * @param apkFile 安装包
-     */
-    private void downloadFail(File apkFile) {
-        if (apkFile.exists()) {
-            apkFile.delete();
-        }
-        if (mDialog != null) {
-            mDialog.dismiss();
-        }
-        if (mDownloadCallBack != null) {
-            mDownloadCallBack.downloadFail();
-        }
+        });
+        thread.start();
     }
 
     /*
@@ -253,7 +243,7 @@ public class DownloadHelper {
      */
     private void downloadSuccess() {
         if (mNotificationHelper != null) {
-            mNotificationHelper.setProgress(100, getInstallApkIntent(new File(mSavePath, mVersionName)));
+            mNotificationHelper.setProgress(100, mIsCheckUp ? getInstallApkIntent(new File(mSavePath, mVersionName)) : null);
         }
         if (mPDialog2Builder != null) {
             mPDialog2Builder.setProgress(100);
@@ -393,5 +383,38 @@ public class DownloadHelper {
         startDownload();
     }
 
+    /**
+     * 中断下载
+     */
+    public void stop() {
+        mIsCancle = true;
+        if (mNotificationHelper != null) {
+            mNotificationHelper.cancel();
+        }
+        if (mDialog != null) {
+            mDialog.dismiss();
+        }
+    }
 
+    /**
+     * 删除文件
+     */
+    public void deleteFile() {
+        File file = new File(mSavePath, mVersionName);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+    /**
+     * 删除制定路径下的文件
+     *
+     * @param filePath 文件路径
+     */
+    public static void deleteFile(String filePath) {
+        File file = new File(filePath);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
 }

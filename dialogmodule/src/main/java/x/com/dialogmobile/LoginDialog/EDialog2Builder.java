@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -84,6 +85,7 @@ public class EDialog2Builder {
     private static final int OUTTIME = 2;
     private CountDownTimer timer;
     private boolean isrun = false;
+    private float alpha;
 
     /**
      * 构造器
@@ -184,6 +186,7 @@ public class EDialog2Builder {
         };
 
         finishhandler.sendEmptyMessage(1);
+        this.alpha = 0.8f;
     }
 
 
@@ -315,6 +318,7 @@ public class EDialog2Builder {
      * @param isDissmiss       点击按钮后是否取消对话框
      * @return
      */
+    @SuppressLint("ClickableViewAccessibility")
     private EDialog2Builder setClickListener(final boolean isDissmiss, String btn1text, String btn2text, final onDialogbtnClickListener btnClickListener) {
         // 设置确认按钮
         final Button btnConfirm = dialog.findViewById(R.id.mdialog_btn1);
@@ -337,6 +341,20 @@ public class EDialog2Builder {
                 }
             }
         });
+        btnConfirm.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        btnConfirm.setAlpha(alpha);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        btnConfirm.setAlpha(1f);
+                        break;
+                }
+                return false;
+            }
+        });
         if (btn2text != null) {
             // 设置取消按钮
             final Button btnCancel = dialog.findViewById(R.id.mdialog_btn2);
@@ -352,6 +370,20 @@ public class EDialog2Builder {
                         btnClickListener.onDialogbtnClick(context, dialog,
                                 onDialogbtnClickListener.BUTTON_CANCEL);
                     }
+                }
+            });
+            btnCancel.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            btnCancel.setAlpha(alpha);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            btnCancel.setAlpha(1f);
+                            break;
+                    }
+                    return false;
                 }
             });
         }
