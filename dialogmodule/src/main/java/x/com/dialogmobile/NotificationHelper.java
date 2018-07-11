@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
 
@@ -37,12 +38,11 @@ public class NotificationHelper {
     private String mPushChannelId;
 
     /**
-     * @param context      上下文
-     * @param contentTitle 推送标题
+     * @param context 上下文
      */
-    public NotificationHelper(Context context, String contentTitle) {
+    public NotificationHelper(Context context) {
         mContext = context;
-        initNotification(contentTitle);
+        initNotification();
     }
 
     /**
@@ -86,6 +86,24 @@ public class NotificationHelper {
         return this;
     }
 
+    /**
+     * 设置自定义样式
+     *
+     * @param remoteViews 自定义view
+     * @return this
+     */
+    public NotificationHelper setCustomContentView(RemoteViews remoteViews) {
+        mBuilder.setCustomContentView(remoteViews);
+        return this;
+    }
+
+    public NotificationHelper setBigTextStyle(String title, String content) {
+        NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle();
+        style.bigText(content);
+        style.setBigContentTitle(title);
+        mBuilder.setStyle(style);
+        return this;
+    }
 
     /**
      * 设置内容跳转Intent
@@ -93,9 +111,11 @@ public class NotificationHelper {
      * @param intent 跳转
      */
     public NotificationHelper setContextIntent(Intent intent) {
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, NOTIFICATION_REQUEST_CODE,
-                Intent.createChooser(intent, ""), PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(pendingIntent);
+        if (intent != null) {
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, NOTIFICATION_REQUEST_CODE,
+                    Intent.createChooser(intent, ""), PendingIntent.FLAG_UPDATE_CURRENT);
+            mBuilder.setContentIntent(pendingIntent);
+        }
         return this;
     }
 
@@ -160,15 +180,13 @@ public class NotificationHelper {
      * 取消通知
      */
     public void cancel() {
-        if (mNotifyManager != null) {
-            mNotifyManager.cancel(mNotificationId);
-        }
+        mNotifyManager.cancel(mNotificationId);
     }
 
     /**
      * 静态方法 根据id清除通知
      *
-     * @param context
+     * @param context 上下文
      */
     public static void cancelById(Context context, int id) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
@@ -185,7 +203,7 @@ public class NotificationHelper {
         if (notificationManager != null) notificationManager.cancelAll();
     }
 
-    /**
+    /*
      * Notification.PRIORITY_DEFAULT(优先级为0)
      * Notification.PRIORITY_HIGH
      * Notification.PRIORITY_LOW
@@ -220,7 +238,7 @@ public class NotificationHelper {
      */
     public void notifyShow() {
         //区分开下载通知，根据当前时间可以直接show出多个应用通知
-        if (mNotificationId != 0) {
+        if (mNotificationId == 0) {
             mNotificationId = (int) System.currentTimeMillis();
         }
         mNotifyManager.notify(mNotificationId, mBuilder.build());
@@ -229,7 +247,7 @@ public class NotificationHelper {
     /**
      * 初始化通知
      */
-    private void initNotification(String contentTitle) {
+    private void initNotification() {
         //默认设置
         mPushChannelId = NOTIFICATION_CHANNEL_ID_NORMAL;
         mPushChannelName = NOTIFICATION_CHANNEL_NAME_NORMAL;
@@ -237,7 +255,7 @@ public class NotificationHelper {
             mNotifyManager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
         }
         mBuilder = new NotificationCompat.Builder(mContext, mPushChannelId);
-        mBuilder.setContentTitle(contentTitle)//设置通知栏标题
+        mBuilder.setContentTitle("默认标题")//设置通知栏标题
                 .setSmallIcon(R.mipmap.ic_launcher);//设置通知小ICON// ;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //清除掉上一次推送建立的消息通道，否则新通道设置无效
@@ -286,6 +304,7 @@ public class NotificationHelper {
             mNotifyManager.createNotificationChannel(mNotificationChannel);
         } else {
             mBuilder.setPriority(NotificationCompat.PRIORITY_MIN);
+            mBuilder.setDefaults(NotificationCompat.DEFAULT_LIGHTS);
         }
     }
 
@@ -306,6 +325,17 @@ public class NotificationHelper {
     }
 
     /**
+     * 分组
+     *
+     * @param groupName 分组名
+     */
+    public void setNotificationGroup(String groupName) {
+        mBuilder.setGroup(groupName);
+        mBuilder.setGroupSummary(true);
+        mNotifyManager.notify(mNotificationId, mBuilder.build());
+    }
+
+    /**
      * 更新通知栏的进度(下载中)
      *
      * @param progress 进度
@@ -313,6 +343,7 @@ public class NotificationHelper {
     public void setProgress(int progress, Intent intent) {
         Log.d("TAG", "setProgress: " + progress);
         if (progress == 100) {
+            mNotifyManager.cancel(mNotificationId);//不管当前显示进度多少，直接清空，并设置下载完成
             mBuilder.setContentText("下载完成").setProgress(100, 100, false);
             //设置点击启动安装
             if (intent != null) {
@@ -322,11 +353,11 @@ public class NotificationHelper {
             }
             mBuilder.setOngoing(false);
             mBuilder.setAutoCancel(true);
-            mNotifyManager.cancel(mNotificationId);//不管当前显示进度多少，直接清空，并设置下载完成
         } else {
-            mBuilder.setContentText("正在下载:" + progress + "%").setProgress(100, progress, false);
+            mBuilder.setContentText("正在下载:" + String.valueOf(progress) + "%").setProgress(100, progress, false);
         }
         mNotifyManager.notify(mNotificationId, mBuilder.build());
+
     }
 
 }
