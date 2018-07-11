@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -21,6 +20,7 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
@@ -51,6 +51,8 @@ public class DownloadHelper {
     private String mBtnSureText;
     private String mBtnCancelText;
     private Thread thread;
+
+    private static ArrayList<DownloadHelper> mDownloadManager = new ArrayList<>();
 
     public interface DownloadCallBack {
         //void downloadCancel();//取消下载时回调
@@ -125,12 +127,15 @@ public class DownloadHelper {
      * 开启下载
      */
     private void startDownload() {
+        mDownloadManager.add(this);
         if (mIsShowNotification && mNotificationHelper == null) {
-            mNotificationHelper = new NotificationHelper(mActivity, TextUtils.isEmpty(mNotificationTitle) ? "" : mNotificationTitle);
+            mNotificationHelper = new NotificationHelper(mActivity);
             if (mNotificationIconId != 0) {
                 mNotificationHelper.setSmallIcon(mNotificationIconId);
             }
+            mNotificationHelper.setTitle(mNotificationTitle);
             mNotificationHelper.setType(NotificationHelper.NOTIFICATION_TYPE_DOWNLOAD);
+            mNotificationHelper.setNotificationGroup("下载");
             mNotificationHelper.setProgress(0, null);
         }
         //显示下载对话框
@@ -394,6 +399,10 @@ public class DownloadHelper {
         if (mDialog != null) {
             mDialog.dismiss();
         }
+        thread = null;
+        mProgressHandler = null;
+        mDownloadCallBack = null;
+        mDownloadManager.remove(this);
     }
 
     /**
@@ -415,6 +424,20 @@ public class DownloadHelper {
         File file = new File(filePath);
         if (file.exists()) {
             file.delete();
+        }
+    }
+
+    /**
+     * 清空所有下载
+     */
+    public static void cancelAll() {
+        if (mDownloadManager != null) {
+            ArrayList<DownloadHelper> list = new ArrayList<>(mDownloadManager);
+            for (DownloadHelper helper : list) {
+                if (helper != null) helper.stop();
+            }
+            mDownloadManager.clear();
+            list.clear();
         }
     }
 }
