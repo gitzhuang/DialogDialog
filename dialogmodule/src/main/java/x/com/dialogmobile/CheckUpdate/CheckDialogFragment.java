@@ -43,6 +43,10 @@ public class CheckDialogFragment extends DialogFragment {
 
     public interface OnCheckcallback {
         void onCancel();
+
+        void onInstallCancel();
+
+        void onDownloadFinish(File apkFile);
     }
 
     public CheckDialogFragment(AppCompatActivity activity, String msg, int layoutStyle, String downloadUrl,
@@ -60,7 +64,6 @@ public class CheckDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.d("TAG", "onCreateDialog: " + this.toString());
         Dialog dialog = new NDialogBuilder(getContext(), layoutStyle, 1.0f)
                 .setTouchOutSideCancelable(false)
                 .setMessage(msg, NDialogBuilder.MSG_LAYOUT_LEFT)
@@ -93,12 +96,12 @@ public class CheckDialogFragment extends DialogFragment {
                                                                     @Override
                                                                     public void installCancel() {
                                                                         //取消安装
-                                                                        Toast.makeText(activity, "取消安装了", Toast.LENGTH_SHORT).show();
+                                                                        callback.onInstallCancel();
                                                                     }
 
                                                                     @Override
                                                                     public void downloadSuccess(File file) {
-
+                                                                        callback.onDownloadFinish(file);
                                                                     }
 
 
@@ -125,7 +128,7 @@ public class CheckDialogFragment extends DialogFragment {
                                                                 })
                                                         .setCheckUp(true)
                                                         .setIsForce(isforce == 1)
-                                                        .setNotificationShow(true, "下载通知", R.mipmap.ic_launcher)
+                                                        .setNotificationShow(true, "正在下载...", R.mipmap.ic_launcher)
                                                         .setDialogShow(true, "下次再说", "立即安装");
                                                         downloadHelper.start();
                                                     }
