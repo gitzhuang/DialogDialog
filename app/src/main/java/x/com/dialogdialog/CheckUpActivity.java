@@ -39,6 +39,16 @@ public class CheckUpActivity extends AppCompatActivity {
                     public void onCancel() {
                         Toast.makeText(CheckUpActivity.this, "345", Toast.LENGTH_SHORT).show();
                     }
+
+                    @Override
+                    public void onInstallCancel() {
+
+                    }
+
+                    @Override
+                    public void onDownloadFinish(File apkFile) {
+
+                    }
                 }).show(getSupportFragmentManager(), "checkup");
 
 
