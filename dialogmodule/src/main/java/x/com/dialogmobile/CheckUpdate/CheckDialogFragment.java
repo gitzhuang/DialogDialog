@@ -1,19 +1,18 @@
 package x.com.dialogmobile.CheckUpdate;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
 import java.io.File;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import x.com.dialogmobile.DownloadHelper;
 import x.com.dialogmobile.NDialogBuilder;
@@ -21,7 +20,7 @@ import x.com.dialogmobile.PermissionHelper;
 import x.com.dialogmobile.R;
 
 public class CheckDialogFragment extends DialogFragment {
-    private AppCompatActivity activity;
+    private Activity activity;
     private int layoutStyle;
     private String downloadUrl;
     private int isforce;
@@ -49,7 +48,7 @@ public class CheckDialogFragment extends DialogFragment {
         void onDownloadFinish(File apkFile);
     }
 
-    public CheckDialogFragment(AppCompatActivity activity, String msg, int layoutStyle, String downloadUrl,
+    public CheckDialogFragment(Activity activity, String msg, int layoutStyle, String downloadUrl,
                                int isforce, String downloadFailMessgae,
                                CheckDialogFragment.OnCheckcallback callback) {
         this.activity = activity;
