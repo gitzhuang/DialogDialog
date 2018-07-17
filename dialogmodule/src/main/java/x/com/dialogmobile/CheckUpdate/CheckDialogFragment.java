@@ -100,6 +100,7 @@ public class CheckDialogFragment extends DialogFragment {
 
                                                                     @Override
                                                                     public void downloadSuccess(File file) {
+                                                                        //下载完成，setCheckUp(true)时自动执行安装
                                                                         callback.onDownloadFinish(file);
                                                                     }
 
