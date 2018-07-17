@@ -3,6 +3,7 @@ package x.com.dialogmobile;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -55,13 +56,12 @@ public class DownloadHelper {
     private static ArrayList<DownloadHelper> mDownloadManager = new ArrayList<>();
 
     public interface DownloadCallBack {
-        //void downloadCancel();//取消下载时回调
 
-        void installCancel();//取消安装时回调
-
-        void downloadSuccess(File file);//下载成功
+        void downloadSuccess(File file);//下载成功时回调
 
         void downloadFail();//下载失败时回调
+
+        void installCancel();//取消安装时回调
     }
 
     @SuppressLint("HandlerLeak")
@@ -79,6 +79,7 @@ public class DownloadHelper {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case DOWNLOAD_ING:
+                        Log.i(TAG, "下载进度：" + mProgress);
                         if (mIsShowDialog && mProgress < 100) {
                             mPDialog2Builder.setProgress(mProgress);
                         }
@@ -87,6 +88,7 @@ public class DownloadHelper {
                         }
                         break;
                     case DOWNLOAD_OVER:
+                        Log.i(TAG, "下载完成。");
                         //刷新进度
                         downloadSuccess();
                         //回调file
@@ -383,7 +385,15 @@ public class DownloadHelper {
      * 开启下载
      */
     public void start() {
-        startDownload();
+        //判断文件是否存在
+        File file = new File(mSavePath, mVersionName);
+        if (file.exists()) {
+            //已存在
+            showAlreadyExistsDialog(file);
+        } else {
+            //不存在，执行下载
+            startDownload();
+        }
     }
 
     /**
@@ -437,5 +447,33 @@ public class DownloadHelper {
             mDownloadManager.clear();
             list.clear();
         }
+    }
+
+    public void showAlreadyExistsDialog(final File file) {
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new NDialogBuilder(mActivity, 0, 1.0f)
+                        .setTitle("文件已存在")
+                        .setTouchOutSideCancelable(false)
+                        .setMessage("文件已存在，是否继续？", NDialogBuilder.MSG_LAYOUT_LEFT)
+                        .setDialogAnimation(NDialogBuilder.DIALOG_ANIM_NORMAL)
+                        .setBtnClickListener(true, "重新下载", "继续", new NDialogBuilder.onDialogbtnClickListener() {
+                            @Override
+                            public void onDialogbtnClick(Context context, Dialog dialog, int whichBtn) {
+                                if (whichBtn == BUTTON_CONFIRM) {
+                                    startDownload();
+                                } else {
+                                    if (mIsCheckUp) {
+                                        //判断是否执行安装
+                                        installAPK();
+                                    }
+                                    mDownloadCallBack.downloadSuccess(file);
+                                }
+                            }
+                        })
+                        .create().show();
+            }
+        });
     }
 }
