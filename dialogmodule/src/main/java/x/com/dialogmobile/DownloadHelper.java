@@ -79,6 +79,7 @@ public class DownloadHelper {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case DOWNLOAD_ING:
+                        Log.i(TAG, "下载进度：" + mProgress);
                         if (mIsShowDialog && mProgress < 100) {
                             mPDialog2Builder.setProgress(mProgress);
                         }
@@ -87,6 +88,7 @@ public class DownloadHelper {
                         }
                         break;
                     case DOWNLOAD_OVER:
+                        Log.i(TAG, "下载完成。");
                         //刷新进度
                         downloadSuccess();
                         //回调file
