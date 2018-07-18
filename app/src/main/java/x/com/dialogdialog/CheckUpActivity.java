@@ -49,7 +49,9 @@ public class CheckUpActivity extends AppCompatActivity {
                     public void onDownloadFinish(File apkFile) {
 
                     }
-                }).show(getSupportFragmentManager(), "checkup");
+                })
+                .setAutoInstall(true)
+                .show(getSupportFragmentManager(), "checkup");
 
 
         //下载工具
