@@ -51,6 +51,7 @@ public class CheckUpActivity extends AppCompatActivity {
                     }
                 })
                 .setAutoInstall(true)
+                .setDismissWhenDownloadFinish(false)
                 .show(getSupportFragmentManager(), "checkup");
 
 
