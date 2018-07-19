@@ -29,6 +29,7 @@ public class CheckDialogFragment extends DialogFragment {
     private DownloadHelper downloadHelper;
     private String downloadFailMessgae;
     private boolean isCheckUp = true;
+    private boolean istDismissWhenDownloadFinish;
 
     private final String[] mPermissionList = new String[]{
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -127,10 +128,11 @@ public class CheckDialogFragment extends DialogFragment {
                                                                     });
                                                                 }
                                                             })
-                                                    .setCheckUp(isCheckUp)
-                                                    .setIsForce(isforce == 1)
-                                                    .setNotificationShow(true, "正在下载...", R.mipmap.ic_launcher)
-                                                    .setDialogShow(true, "下次再说", "立即安装");
+                                                            .setCheckUp(isCheckUp)
+                                                            .setIsForce(isforce == 1)
+                                                            .setDismissWhenDownloadFinish(istDismissWhenDownloadFinish)
+                                                            .setNotificationShow(true, "正在下载...", R.mipmap.ic_launcher)
+                                                            .setDialogShow(true, "下次再说", "立即安装");
                                                     downloadHelper.start();
                                                 }
 
@@ -166,8 +168,23 @@ public class CheckDialogFragment extends DialogFragment {
         //super.onDismiss(dialog);
     }
 
+    /**
+     *  下载完成时是否自动安装
+     * @param isAutoInstall 是否自动安装
+     * @return this
+     */
     public CheckDialogFragment setAutoInstall(boolean isAutoInstall){
         this.isCheckUp = isAutoInstall;
+        return this;
+    }
+
+    /**
+     * 下载完成时是否关闭下载进度
+     * @param isDismiss 是否隐藏
+     * @return this
+     */
+    public CheckDialogFragment setDismissWhenDownloadFinish(boolean isDismiss){
+        this.istDismissWhenDownloadFinish = isDismiss;
         return this;
     }
 }

@@ -49,6 +49,7 @@ public class DownloadHelper {
     private boolean mIsShowNotification;//是否显示下载进度通知
     private boolean mIsShowDialog;//是否显示下载进度弹框
     private boolean mIsCheckUp;//是否是更新，true则自动安装
+    private boolean mIsDismissWhenDownloadFinish;//下载完成时是否关闭对话框
     private String mBtnSureText;
     private String mBtnCancelText;
     private Thread thread;
@@ -250,7 +251,7 @@ public class DownloadHelper {
         if (mNotificationHelper != null) {
             mNotificationHelper.setProgress(100, mIsCheckUp ? getInstallApkIntent(new File(mSavePath, mVersionName)) : null);
         }
-        if (mPDialog2Builder != null) {
+        if (mPDialog2Builder != null && !mIsDismissWhenDownloadFinish) {
             mPDialog2Builder.setProgress(100);
             mPDialog2Builder.setBtnCancel(mBtnCancelText, new View.OnClickListener() {
                 @Override
@@ -266,6 +267,8 @@ public class DownloadHelper {
                 }
             });
             mPDialog2Builder.setBtnVisity(mIsForce == 0, true);
+        }else {
+            if(mDialog != null) mDialog.dismiss();
         }
     }
 
@@ -378,6 +381,16 @@ public class DownloadHelper {
      */
     public DownloadHelper setSavePath(String path) {
         mSavePath = path;
+        return this;
+    }
+
+    /**
+     * 设置下载完成时是否因此下载进度
+     * @param isDismiss
+     * @return
+     */
+    public DownloadHelper setDismissWhenDownloadFinish(boolean isDismiss){
+        mIsDismissWhenDownloadFinish = isDismiss;
         return this;
     }
 
