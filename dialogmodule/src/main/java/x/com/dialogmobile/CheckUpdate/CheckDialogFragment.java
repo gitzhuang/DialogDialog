@@ -29,7 +29,6 @@ public class CheckDialogFragment extends DialogFragment {
     private DownloadHelper downloadHelper;
     private String downloadFailMessgae;
     private boolean isCheckUp = true;
-    private Dialog dialog;
 
     private final String[] mPermissionList = new String[]{
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -65,7 +64,7 @@ public class CheckDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        dialog = new NDialogBuilder(getContext(), layoutStyle, 1.0f)
+        Dialog dialog = new NDialogBuilder(getContext(), layoutStyle, 1.0f)
             .setTouchOutSideCancelable(false)
             .setMessage(msg, NDialogBuilder.MSG_LAYOUT_LEFT)
             .setDialogAnimation(NDialogBuilder.DIALOG_ANIM_NORMAL)
