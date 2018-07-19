@@ -24,6 +24,7 @@ public class CheckUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_up);
+
         //检查更新
         new CheckDialogFragment(this,
                 "版本更新内容",
