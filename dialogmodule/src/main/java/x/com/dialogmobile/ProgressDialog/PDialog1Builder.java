@@ -11,7 +11,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import x.com.dialogmobile.NDialogBuilder;
 import x.com.dialogmobile.R;
 
 /**
@@ -22,6 +21,7 @@ public class PDialog1Builder {
     private Dialog errordialog;
     private Context context;
     private TextView dialogMsg;
+    private onProgressFinishListener finishListener;
     // 弹出dialog时候是否要显示阴影
     private static boolean dimEnable = true;
     /**
@@ -113,6 +113,14 @@ public class PDialog1Builder {
         return this;
     }
 
+    public interface onProgressFinishListener {
+        void onProgressFinish();
+    }
+
+    public PDialog1Builder setonInputCodeListener(final onProgressFinishListener finishListener) {
+        this.finishListener = finishListener;
+        return this;
+    }
     public Dialog create() {
         if (context instanceof Activity) {
             dialog.setOwnerActivity((Activity) context);
@@ -124,18 +132,8 @@ public class PDialog1Builder {
             public void onFinish() {
                 //显示错误对话框
                 dialog.dismiss();
-                errordialog = new NDialogBuilder(context, 0, 1.0f)
-                        .setTouchOutSideCancelable(false)
-                        .setMessage("345tret", NDialogBuilder.MSG_LAYOUT_LEFT)
-                        .setDialogAnimation(NDialogBuilder.DIALOG_ANIM_NORMAL)
-                        .setBtnClickListener(true, "", new NDialogBuilder.onDialogbtnClickListener() {
-                            @Override
-                            public void onDialogbtnClick(Context context, Dialog dialog, int whichBtn) {
-                                errordialog.dismiss();
-                            }
-                        })
-                        .create();
-                errordialog.show();
+                finishListener.onProgressFinish();
+
             }
         }.start();
         return dialog;
