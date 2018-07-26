@@ -18,9 +18,9 @@ import x.com.dialogmobile.R;
  */
 public class PDialog1Builder {
     private Dialog dialog;
-    private Dialog errordialog;
     private Context context;
     private TextView dialogMsg;
+    private long mtime = 10000;
     private onProgressFinishListener finishListener;
     // 弹出dialog时候是否要显示阴影
     private static boolean dimEnable = true;
@@ -113,6 +113,11 @@ public class PDialog1Builder {
         return this;
     }
 
+    public PDialog1Builder settime(long mtime) {
+        this.mtime = mtime;
+        return this;
+    }
+
     public interface onProgressFinishListener {
         void onProgressFinish();
     }
@@ -121,11 +126,12 @@ public class PDialog1Builder {
         this.finishListener = finishListener;
         return this;
     }
+
     public Dialog create() {
         if (context instanceof Activity) {
             dialog.setOwnerActivity((Activity) context);
         }
-        new CountDownTimer(10000, 1000) {
+        new CountDownTimer(mtime, 1000) {
             public void onTick(long millisUntilFinished) {
             }
 

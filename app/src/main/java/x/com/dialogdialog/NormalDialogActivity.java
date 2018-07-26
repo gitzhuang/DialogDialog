@@ -45,11 +45,11 @@ public class NormalDialogActivity extends AppCompatActivity {
 //        a.show();
 
 
-        new PDialog1Builder(this, 0, 1.0f).setMessage("www").setTouchOutSideCancelable(false)
+        new PDialog1Builder(this, 0, 1.0f).setMessage("www").settime(1000).setTouchOutSideCancelable(false)
                 .setonInputCodeListener(new PDialog1Builder.onProgressFinishListener() {
                     @Override
                     public void onProgressFinish() {
-                       Dialog errordialog = new NDialogBuilder(NormalDialogActivity.this, 0, 1.0f)
+                        Dialog errordialog = new NDialogBuilder(NormalDialogActivity.this, 0, 1.0f)
                                 .setTouchOutSideCancelable(false)
                                 .setMessage("345tret", NDialogBuilder.MSG_LAYOUT_LEFT)
                                 .setDialogAnimation(NDialogBuilder.DIALOG_ANIM_NORMAL)
