@@ -45,7 +45,7 @@ public class NormalDialogActivity extends AppCompatActivity {
 //        a.show();
 
 
-        new PDialog1Builder(this, 0, 1.0f).setMessage("www").settime(1000).setTouchOutSideCancelable(false)
+        a=new PDialog1Builder(this, 0, 1.0f).setMessage("www").settime(1000).setTouchOutSideCancelable(false)
                 .setonInputCodeListener(new PDialog1Builder.onProgressFinishListener() {
                     @Override
                     public void onProgressFinish() {
@@ -61,7 +61,8 @@ public class NormalDialogActivity extends AppCompatActivity {
                                 .create();
                         errordialog.show();
                     }
-                }).create().show();
+                }).create();a.show();
+                PDialog1Builder.stop();
     }
 
 }

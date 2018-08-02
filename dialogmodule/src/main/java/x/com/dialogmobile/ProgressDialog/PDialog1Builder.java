@@ -24,6 +24,7 @@ public class PDialog1Builder {
     private onProgressFinishListener finishListener;
     // 弹出dialog时候是否要显示阴影
     private static boolean dimEnable = true;
+    private static CountDownTimer a;
     /**
      * 对话框透明比例
      */
@@ -131,7 +132,7 @@ public class PDialog1Builder {
         if (context instanceof Activity) {
             dialog.setOwnerActivity((Activity) context);
         }
-        new CountDownTimer(mtime, 1000) {
+        a = new CountDownTimer(mtime, 1000) {
             public void onTick(long millisUntilFinished) {
             }
 
@@ -143,5 +144,9 @@ public class PDialog1Builder {
             }
         }.start();
         return dialog;
+    }
+
+    public static void stop() {
+        a.cancel();
     }
 }
