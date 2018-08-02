@@ -147,6 +147,8 @@ public class PDialog1Builder {
     }
 
     public static void stop() {
-        a.cancel();
+        if (a != null) {
+            a.cancel();
+        }
     }
 }
