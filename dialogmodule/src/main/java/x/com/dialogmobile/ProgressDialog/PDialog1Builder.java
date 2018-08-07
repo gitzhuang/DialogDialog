@@ -11,7 +11,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import x.com.dialogmobile.NDialogBuilder;
 import x.com.dialogmobile.R;
 
 /**
@@ -19,11 +18,13 @@ import x.com.dialogmobile.R;
  */
 public class PDialog1Builder {
     private Dialog dialog;
-    private Dialog errordialog;
     private Context context;
     private TextView dialogMsg;
+    private long mtime = 10000;
+    private onProgressFinishListener finishListener;
     // 弹出dialog时候是否要显示阴影
     private static boolean dimEnable = true;
+    private static CountDownTimer a;
     /**
      * 对话框透明比例
      */
@@ -113,31 +114,41 @@ public class PDialog1Builder {
         return this;
     }
 
+    public PDialog1Builder settime(long mtime) {
+        this.mtime = mtime;
+        return this;
+    }
+
+    public interface onProgressFinishListener {
+        void onProgressFinish();
+    }
+
+    public PDialog1Builder setonInputCodeListener(final onProgressFinishListener finishListener) {
+        this.finishListener = finishListener;
+        return this;
+    }
+
     public Dialog create() {
         if (context instanceof Activity) {
             dialog.setOwnerActivity((Activity) context);
         }
-        new CountDownTimer(10000, 1000) {
+        a = new CountDownTimer(mtime, 1000) {
             public void onTick(long millisUntilFinished) {
             }
 
             public void onFinish() {
                 //显示错误对话框
                 dialog.dismiss();
-                errordialog = new NDialogBuilder(context, 0, 1.0f)
-                        .setTouchOutSideCancelable(false)
-                        .setMessage("345tret", NDialogBuilder.MSG_LAYOUT_LEFT)
-                        .setDialogAnimation(NDialogBuilder.DIALOG_ANIM_NORMAL)
-                        .setBtnClickListener(true, "", new NDialogBuilder.onDialogbtnClickListener() {
-                            @Override
-                            public void onDialogbtnClick(Context context, Dialog dialog, int whichBtn) {
-                                errordialog.dismiss();
-                            }
-                        })
-                        .create();
-                errordialog.show();
+                finishListener.onProgressFinish();
+
             }
         }.start();
         return dialog;
+    }
+
+    public static void stop() {
+        if (a != null) {
+            a.cancel();
+        }
     }
 }
